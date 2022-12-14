@@ -1,7 +1,6 @@
 import {
   Button,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input
@@ -21,18 +20,59 @@ export default function Registration() {
   }
 
   return (
-    <FormControl as="form" onSubmit={handleSubmit(onSubmit)}>
+    <FormControl
+      w={'411px'}
+      display={'flex'}
+      flexDirection={'column'}
+      justifyContent={'center'}
+      alignItems={'flex-start'}
+      padding={'44px 48px'}
+      gap={'32px'}
+      borderRadius={'4px'}
+      backgroundColor={'var(--grey10)'}
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <h2
         style={{
-          color: 'var(--random1)'
+          color: '#000000',
+          fontWeight: '500',
+          fontSize: '24px',
+          lineHeight: '30px',
+          fontStyle: 'normal'
         }}
       >
         Cadastro
       </h2>
-      <p>Informações pessoais</p>
-      <FormLabel>Nome</FormLabel>
+      <p
+        style={{
+          color: '#000000',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '24px',
+          fontStyle: 'normal'
+        }}
+      >
+        Informações pessoais
+      </p>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Nome
+      </FormLabel>
 
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.name ? true : false}
         type="name"
         {...register('name')}
@@ -46,8 +86,23 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>Email</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Email
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.email ? true : false}
         type="email"
         {...register('email')}
@@ -61,8 +116,23 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>CPF</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        CPF
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.cpf ? true : false}
         type="cpf"
         {...register('cpf')}
@@ -76,8 +146,23 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>Telefone</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Telefone
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.tel ? true : false}
         type="tel"
         {...register('tel')}
@@ -91,24 +176,64 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>Data de Aniversário</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Data de Aniversário
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.birthDate ? true : false}
         type="birthDate"
         {...register('birthDate')}
         placeholder={'00/00/00'}
       />
       {!errors.birthDate ? (
-        <FormHelperText>Entre com seu birthDate</FormHelperText>
+        <FormHelperText>Entre com sua data de aniversário</FormHelperText>
       ) : (
         <FormHelperText color="red">
           {(errors.birthDate as FieldError).message}
         </FormHelperText>
       )}
 
-      <p>Informações de Endereço</p>
-      <FormLabel>CEP</FormLabel>
+      <p
+        style={{
+          color: '#000000',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '24px',
+          fontStyle: 'normal'
+        }}
+      >
+        Informações de Endereço
+      </p>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        CEP
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.cep ? true : false}
         type="cep"
         {...register('cep')}
@@ -121,39 +246,89 @@ export default function Registration() {
           {(errors.cep as FieldError).message}
         </FormHelperText>
       )}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <FormLabel
+          style={{
+            color: 'var(--grey1)',
+            fontWeight: '500',
+            fontSize: '14px',
+            lineHeight: '17px',
+            fontStyle: 'normal'
+          }}
+        >
+          Estado
+        </FormLabel>
+        <Input
+          w={'315px'}
+          h={'48px'}
+          borderRadius={'4px'}
+          padding={'0px 16px 0px 16px'}
+          gap={'10px'}
+          isInvalid={errors.state ? true : false}
+          type="state"
+          {...register('state')}
+          placeholder={'Digitar estado'}
+        />
+        <>
+          {!errors.state ? (
+            <FormHelperText>Entre com seu estado</FormHelperText>
+          ) : (
+            <FormHelperText color="red">
+              {(errors.state as FieldError).message}
+            </FormHelperText>
+          )}
+        </>
 
-      <FormLabel>State</FormLabel>
-      <Input
-        isInvalid={errors.state ? true : false}
-        type="state"
-        {...register('state')}
-        placeholder={'Digitar estado'}
-      />
-      {!errors.state ? (
-        <FormHelperText>Entre com seu estado</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.state as FieldError).message}
-        </FormHelperText>
-      )}
+        <>
+          <FormLabel
+            style={{
+              color: 'var(--grey1)',
+              fontWeight: '500',
+              fontSize: '14px',
+              lineHeight: '17px',
+              fontStyle: 'normal'
+            }}
+          >
+            Cidade
+          </FormLabel>
+          <Input
+            w={'315px'}
+            h={'48px'}
+            borderRadius={'4px'}
+            padding={'0px 16px 0px 16px'}
+            gap={'10px'}
+            isInvalid={errors.city ? true : false}
+            type="city"
+            {...register('city')}
+            placeholder={'Digitar cidade'}
+          />
+          {!errors.city ? (
+            <FormHelperText>Entre com sua cidade</FormHelperText>
+          ) : (
+            <FormHelperText color="red">
+              {(errors.city as FieldError).message}
+            </FormHelperText>
+          )}
+        </>
+      </div>
 
-      <FormLabel>Cidade</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Rua
+      </FormLabel>
       <Input
-        isInvalid={errors.city ? true : false}
-        type="city"
-        {...register('city')}
-        placeholder={'Digitar cidade'}
-      />
-      {!errors.city ? (
-        <FormHelperText>Entre com sua cidade</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.city as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <FormLabel>Rua</FormLabel>
-      <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.street ? true : false}
         type="street"
         {...register('street')}
@@ -167,22 +342,52 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>Número</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Número
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.number ? true : false}
         type="number"
         {...register('number')}
         placeholder={'Digitar número'}
       />
       {!errors.number ? (
-        <FormHelperText>Entre com seu númeror</FormHelperText>
+        <FormHelperText>Entre com seu número</FormHelperText>
       ) : (
         <FormHelperText color="red">
           {(errors.number as FieldError).message}
         </FormHelperText>
       )}
-      <FormLabel>Complemento</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Complemento
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.complement ? true : false}
         type="complement"
         {...register('complement')}
@@ -196,11 +401,65 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>Tipo de conta</FormLabel>
-      <Button>comprador</Button>
-      <Button>anunciante</Button>
-      <FormLabel>Senha</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Tipo de conta
+      </FormLabel>
+      <div style={{ display: 'flex' }}>
+        <Button
+          w={'152px'}
+          h={'48px'}
+          padding={'12px 28px 12px 28px'}
+          gap={'10px'}
+          borderRadius={'4px'}
+          backgroundColor={'var(--brand1)'}
+          color={'var(--whiteFixed)'}
+          fontWeight={600}
+          fontSize={'16px'}
+          marginRight={'10px'}
+        >
+          Comprador
+        </Button>
+        <Button
+          w={'152px'}
+          h={'48px'}
+          padding={'12px 28px 12px 28px'}
+          gap={'10px'}
+          borderRadius={'4px'}
+          borderStyle={'1px solid var(--grey4)'}
+          backgroundColor={'var(--grey4'}
+          color={'var(--grey0)'}
+          fontWeight={600}
+          fontSize={'16px'}
+          marginLeft={'10px'}
+        >
+          Anunciante
+        </Button>
+      </div>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Senha
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.password ? true : false}
         type="password"
         {...register('password')}
@@ -214,8 +473,23 @@ export default function Registration() {
         </FormHelperText>
       )}
 
-      <FormLabel>Confirmar senha</FormLabel>
+      <FormLabel
+        style={{
+          color: 'var(--grey1)',
+          fontWeight: '500',
+          fontSize: '14px',
+          lineHeight: '17px',
+          fontStyle: 'normal'
+        }}
+      >
+        Confirmar senha
+      </FormLabel>
       <Input
+        w={'315px'}
+        h={'48px'}
+        borderRadius={'4px'}
+        padding={'0px 16px 0px 16px'}
+        gap={'10px'}
         isInvalid={errors.passwordConfirm ? true : false}
         type="passwordConfirm"
         {...register('passwordConfirm')}
@@ -228,7 +502,22 @@ export default function Registration() {
           {(errors.passwordConfirm as FieldError).message}
         </FormHelperText>
       )}
-      <Button type="submit">Finalizar Cadatsro</Button>
+      <Button
+        w={'315px'}
+        h={'48px'}
+        padding={'12px 28px'}
+        gap={'10px'}
+        borderRadius={'4px'}
+        borderStyle={'1px solid var(--grey4)'}
+        backgroundColor={'var(--brand1)'}
+        color={'var(--whiteFixed)'}
+        fontWeight={600}
+        fontSize={'16px'}
+        marginLeft={'10px'}
+        type="submit"
+      >
+        Finalizar Cadastro
+      </Button>
     </FormControl>
   )
 }
