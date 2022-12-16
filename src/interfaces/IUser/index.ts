@@ -8,7 +8,7 @@ export interface IUser {
     image: string
     phoneNumber: string
     password: string
-    isActive: string
+    isActive: boolean
     addressId: string
     cpf: string
     isSeller: boolean
