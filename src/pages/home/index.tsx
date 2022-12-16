@@ -1,7 +1,10 @@
-import { CardVehicle } from "../../components/cardVehicle/cardVehicle"
+import { Header } from '../../components/Header'
+import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
 
-const Home = () => <>
-    <h1>Home</h1>
-</>
+const Home = () => (
+  <>
+    <Header />
+  </>
+)
 
 export default Home

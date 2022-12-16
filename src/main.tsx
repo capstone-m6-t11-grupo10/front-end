@@ -8,6 +8,8 @@ import Providers from './providers'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <BrowserRouter>
-    <App />
+    <Providers>
+      <App />
+    </Providers>
   </BrowserRouter>
 )

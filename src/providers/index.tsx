@@ -1,7 +1,8 @@
-import { IPropChildren } from 'interfaces/generic'
+import { IPropChildren } from '../interfaces/IAddress'
+import { AuthProvider } from './AuthProvider'
 
-const Providers = ({ children }: IPropChildren) => {
-  //providers here
-}
+const Providers = ({ children }: IPropChildren) => (
+  <AuthProvider>{children}</AuthProvider>
+)
 
 export default Providers
