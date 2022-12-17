@@ -6,9 +6,9 @@ export interface IPost {
     uuid: string
     tittle: string
     description: string
+    isActive: boolean
     image: string
     vehicleId: string
-    isActive: boolean
     userId: string
 }
 export interface IPostVehicled {
