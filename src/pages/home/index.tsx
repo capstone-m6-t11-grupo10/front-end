@@ -1,7 +1,15 @@
-import { CardVehicle } from "../../components/cardVehicle/cardVehicle"
+
+import { Header } from '../../components/Header'
+import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
 import { vehicleMocked } from "../../mocks/mocksVehicles"
-const Home = () => <>
-    <h1>Home</h1>
-</>
+const Home = () => (
+  <>
+    <Header />
+  </>
+)
+
+
+
+
 
 export default Home

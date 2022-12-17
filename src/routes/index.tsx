@@ -7,7 +7,11 @@ import Home from '../pages/home'
 import Login from '../pages/login'
 
 import Registration from '../pages/registration'
+
+import { ModalAdminEditProfile } from '../components/ModalAdminEditProfile'
+
 import { ModalAdminEditProfile } from '../components/Modals/ModalAdminEditProfile'
+
 const Router = () => (
   <>
     <GlobalStyle />
@@ -18,9 +22,7 @@ const Router = () => (
 
       <Route path="/edit-profile" element={<ModalAdminEditProfile />} />
 
-
       <Route path="/login" element={<Login />} />
-
     </Routes>
   </>
 )
