@@ -1,17 +1,29 @@
 import { IPost } from "../IPost"
+import { IUser } from "../IUser"
 
 export interface IVehicle {
     uuid: string
-    color: string
+    tittle: string
+    description: string
+    isActive: boolean
+    price: string
     type: string
+    color: string
     plate: string
-    images: string[]
-    password: string
+    images: string
     km: number
     year: string
-    postId: string
-    userId: string
+    user: IUser
 }
+
+export interface IPropsVehicle {
+    props: IVehicle
+}
+
+export interface IPropsVehicleIsActive {
+    props: { isActive: boolean }
+}
+
 export interface IVehiclePosted {
     uuid: string
     color: string
