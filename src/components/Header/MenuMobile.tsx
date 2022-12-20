@@ -1,15 +1,15 @@
 import {
-  Box,
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
   Flex
 } from '@chakra-ui/react'
-import { NavItem } from './NavItem'
-import { User } from './User'
-import { useDisclosure } from '@chakra-ui/react'
 import { Menu } from './Menu'
+import { User } from './User'
+import { NavItem } from './NavItem'
+
+import { useDisclosure } from '@chakra-ui/react'
 import { useAuth } from '../../providers/AuthProvider'
 
 interface MenuMobileProps {

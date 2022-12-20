@@ -1,5 +1,4 @@
-import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
-import { Menu } from './Menu'
+import { Box, Flex, Text } from '@chakra-ui/react'
 
 interface UserProps {
   onToggle: () => void
