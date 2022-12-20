@@ -9,9 +9,8 @@ import {
   Button,
   Flex
 } from '@chakra-ui/react'
-import { Footer } from '../../components/Footer'
 
-export default function DetailedVeicle() {
+export default function DetailedVehicle() {
   return (
     <Flex
       style={{

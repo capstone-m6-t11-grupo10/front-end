@@ -8,7 +8,7 @@ import Login from '../pages/login'
 import Registration from '../pages/registration'
 import ProfileViewAdmin from '../pages/profileViewAdmin'
 
-import DetailedVeicle from '../pages/detailedVehicle'
+import DetailedVehicle from '../pages/detailedVehicle'
 
 import { BannerHome } from '../components/BannerHome'
 
@@ -26,11 +26,9 @@ const Router = () => (
 
       <Route path="/profile" element={<ProfileViewAdmin />} />
 
-
-      <Route path="/detailedVeicle" element={<DetailedVeicle />} />
+      <Route path="/detailedVehicle" element={<DetailedVehicle />} />
 
       <Route path="/banner" element={<BannerHome />} />
-
     </Routes>
   </>
 )
