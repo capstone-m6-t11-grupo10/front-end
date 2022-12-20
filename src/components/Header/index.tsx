@@ -27,7 +27,7 @@ export const Header = () => {
   return (
     <Flex as="nav">
       <Flex
-        h="80px"
+        h="100px"
         paddingX={['25px', '45px']}
         w="100vw"
         maxW="1600px"
