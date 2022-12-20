@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text, IconButton } from '@chakra-ui/react'
+import { Flex, Image, Text, IconButton } from '@chakra-ui/react'
 import { RiArrowUpSLine } from 'react-icons/ri'
 
 import Logo from '../../assets/whiteLogo.svg'
@@ -10,15 +10,13 @@ export const Footer = () => {
     <Flex
       flexDir={['column', 'column', 'row', 'row']}
       justifyContent={['center', 'center', 'space-between', 'space-between']}
-      align="center"
-      gap={['15px', '15px', '25px', '35px']}
-      position="absolute"
-      h={['160px', '160px', '90px', '90px']}
-      bottom="0"
+      alignItems="center"
+      gap={['15px', '15px', '35px', '45px']}
+      h={['160px', '160px', '90px']}
       padding={['20px 10px', '20px 10px', '30px 59px']}
       color="var(--whiteFixed)"
-      w="100vw"
       maxW="1600px"
+      mt="80px"
       bg="var(--grey0)"
     >
       <Image src={Logo} alt="Motors Shop" />

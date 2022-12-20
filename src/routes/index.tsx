@@ -1,14 +1,12 @@
-import { Route, Routes } from 'react-router-dom'
-
 import GlobalStyle from '../styles/global'
 
-import Home from '../pages/home'
-
-import Login from '../pages/login'
-
-import Registration from '../pages/registration'
-
+import { Route, Routes } from 'react-router-dom'
 import { ModalAdminEditProfile } from '../components/Modals/ModalAdminEditProfile'
+
+import Home from '../pages/home'
+import Login from '../pages/login'
+import Registration from '../pages/registration'
+import ProfileViewAdmin from '../pages/profileViewAdmin'
 
 const Router = () => (
   <>
@@ -21,6 +19,8 @@ const Router = () => (
       <Route path="/edit-profile" element={<ModalAdminEditProfile />} />
 
       <Route path="/login" element={<Login />} />
+
+      <Route path="/profile" element={<ProfileViewAdmin />} />
     </Routes>
   </>
 )

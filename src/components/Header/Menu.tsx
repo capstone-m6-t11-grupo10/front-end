@@ -1,12 +1,4 @@
-import {
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  VStack
-} from '@chakra-ui/react'
+import { Drawer, DrawerBody, DrawerContent, Flex } from '@chakra-ui/react'
 import { NavItem } from './NavItem'
 
 interface MenuProps {
