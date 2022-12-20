@@ -8,6 +8,8 @@ import Login from '../pages/login'
 
 import Registration from '../pages/registration'
 
+import ProfileViewAdmin from '../pages/profileViewAdmin'
+
 import { ModalAdminEditProfile } from '../components/Modals/ModalAdminEditProfile'
 
 const Router = () => (
@@ -21,6 +23,8 @@ const Router = () => (
       <Route path="/edit-profile" element={<ModalAdminEditProfile />} />
 
       <Route path="/login" element={<Login />} />
+
+      <Route path="/profile" element={<ProfileViewAdmin />} />
     </Routes>
   </>
 )
