@@ -7,6 +7,7 @@ import Home from '../pages/home'
 import Login from '../pages/login'
 import Registration from '../pages/registration'
 import ProfileViewAdmin from '../pages/profileViewAdmin'
+import { BannerHome } from '../components/BannerHome'
 
 const Router = () => (
   <>
@@ -21,6 +22,8 @@ const Router = () => (
       <Route path="/login" element={<Login />} />
 
       <Route path="/profile" element={<ProfileViewAdmin />} />
+
+      <Route path="/banner" element={<BannerHome />} />
     </Routes>
   </>
 )
