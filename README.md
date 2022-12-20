@@ -1,6 +1,3 @@
-# front-end
-# back-end
-
 # front-end - Documentação
 
 ## Sumário
