@@ -8,11 +8,28 @@ import {
   Text,
   Button,
   Flex,
-  Box
+  Box,
+  Grid
 } from '@chakra-ui/react'
 import { Footer } from '../../components/Footer'
-
+//essa funcao vai retornar os valores para meu front
+import { UseVehicle } from '../../providers/vehicleProvider'
+import { useEffect } from 'react'
+import { useAuth } from '../../providers/AuthProvider'
+// import { mask } from 'remask'
 export default function DetailedVehicle() {
+  const idVehicleMock = '24276e49-1da0-46cf-859c-0287afb54264'
+
+  const { listVehicle, vehicle } = UseVehicle()
+
+  const { setAuthenticated } = useAuth()
+  setAuthenticated(true)
+
+  useEffect(() => {
+    listVehicle(idVehicleMock)
+  }, [])
+
+  const imagemTeste = vehicle.images && vehicle.images[0].image
   return (
     <Box w="100%">
       <Flex
@@ -43,8 +60,8 @@ export default function DetailedVehicle() {
             <Card bg={'var(--grey10)'}>
               <CardBody>
                 <Image
-                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                  alt="Green double couch with wooden legs"
+                  src={imagemTeste || ''}
+                  alt={vehicle?.title}
                   borderRadius="lg"
                   width={'400px'}
                   height={'300px'}
@@ -54,9 +71,7 @@ export default function DetailedVehicle() {
             </Card>
             <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
               <CardBody>
-                <Heading size="md">
-                  Mercedes Benz A 200 CGI ADVANCE SEDAN Mercedes Benz A 200
-                </Heading>
+                <Heading size="md">{vehicle?.title}</Heading>
               </CardBody>
 
               <CardFooter display={'flex'} justifyContent={'space-between'}>
@@ -75,7 +90,7 @@ export default function DetailedVehicle() {
                         bg="var(--brand4)"
                         color="var(--brand1)"
                       >
-                        2013
+                        {vehicle?.year}
                       </Text>
                       <Text
                         padding="0.3rem"
@@ -83,7 +98,7 @@ export default function DetailedVehicle() {
                         marginLeft="2rem"
                         color="var(--brand1)"
                       >
-                        0 KM
+                        {vehicle?.km} KM
                       </Text>
                     </div>
 
@@ -98,7 +113,10 @@ export default function DetailedVehicle() {
                   </div>
                 </div>
 
-                <Text color="var(--grey1)">R$ 45.000,00</Text>
+                <Text color="var(--grey1)">
+                  {/* R$ {mask(vehicle?.price, ['99.999.99', '9.999.999.99'])} */}
+                  R${vehicle.price}
+                </Text>
               </CardFooter>
             </Card>
 
@@ -113,9 +131,7 @@ export default function DetailedVehicle() {
                 >
                   Descrição
                 </p>
-                This sofa is perfect for modern tropical spaces, baroque
-                inspired spaces, earthy toned spaces and for people who love a
-                chic design with a sprinkle of vintage design.
+                {vehicle?.description}
               </Text>
             </Card>
 
@@ -149,17 +165,16 @@ export default function DetailedVehicle() {
               </div>
 
               <Text marginTop="2rem">
-                achei uma bosta It is a long established fact that a reader will
-                be distracted by the readable content of a page when looking at
-                its layout. The point of using Lorem Ipsum is that it has a
-                more-or-less normal distribution of letters, as opposed to using
-                'Content here, content here', making it look like readable
-                English. Many desktop publishing packages and web page editors
-                now use Lorem Ipsum as their default model text, and a search
-                for 'lorem ipsum' will uncover many web sites still in their
-                infancy. Various versions have evolved over the years, sometimes
-                by accident, sometimes on purpose (injected humour and the
-                like).
+                It is a long established fact that a reader will be distracted
+                by the readable content of a page when looking at its layout.
+                The point of using Lorem Ipsum is that it has a more-or-less
+                normal distribution of letters, as opposed to using 'Content
+                here, content here', making it look like readable English. Many
+                desktop publishing packages and web page editors now use Lorem
+                Ipsum as their default model text, and a search for 'lorem
+                ipsum' will uncover many web sites still in their infancy.
+                Various versions have evolved over the years, sometimes by
+                accident, sometimes on purpose (injected humour and the like).
               </Text>
             </Card>
             <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
@@ -188,11 +203,61 @@ export default function DetailedVehicle() {
             </Card>
           </section>
           <section style={{ width: '30%' }}>
-            <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
+            <Card
+              display="flex"
+              flexDirection="column"
+              padding={'2rem 4rem'}
+              bg={'var(--grey10)'}
+            >
               FOTOS
+              <Flex gap="1rem">
+                {vehicle.images &&
+                  vehicle.images.map(image => (
+                    <Flex
+                      align="center"
+                      justifyContent="center"
+                      bg="var(--grey7)"
+                      gap="1rem"
+                      w="90px"
+                      h="90px"
+                    >
+                      <Image w="65px" h="50px" src={image.image} />
+                    </Flex>
+                  ))}
+              </Flex>
             </Card>
-            <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
-              PERFIL
+            <Card mt="2rem" padding={'2rem 4rem'} bg={'var(--grey10)'}>
+              <Flex
+                justifyContent="center"
+                flexWrap="wrap"
+                flexDirection="column"
+                alignItems="center"
+                gap="1rem"
+              >
+                <img
+                  style={{
+                    borderRadius: '100%',
+                    width: '100px',
+                    height: '100px'
+                  }}
+                  src="https://s3.static.brasilescola.uol.com.br/be/2020/08/lobo-guara.jpg"
+                />
+                <Text color="var(--grey1)" fontWeight="600">
+                  Samuel tigre
+                </Text>
+                <Text>
+                  Various versions have evolved over the years, sometimes by
+                  accident, sometimes on purpose (injected humour and the like)
+                </Text>
+                <Button
+                  bg="var(--grey0)"
+                  color="var(--whiteFixed)"
+                  w="280px"
+                  h="48px"
+                >
+                  Ver Todos os Anuncios
+                </Button>
+              </Flex>
             </Card>
           </section>
         </main>
