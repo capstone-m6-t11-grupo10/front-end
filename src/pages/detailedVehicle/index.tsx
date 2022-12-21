@@ -8,25 +8,29 @@ import {
   Text,
   Button,
   Flex,
-  Box,
-  Grid
+  Box
 } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
+
 import { Footer } from '../../components/Footer'
 //essa funcao vai retornar os valores para meu front
 import { UseVehicle } from '../../providers/vehicleProvider'
 import { useEffect } from 'react'
 import { useAuth } from '../../providers/AuthProvider'
-// import { mask } from 'remask'
 export default function DetailedVehicle() {
-  const idVehicleMock = '24276e49-1da0-46cf-859c-0287afb54264'
-
+  const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
+  const params = useParams()
   const { listVehicle, vehicle } = UseVehicle()
 
   const { setAuthenticated } = useAuth()
   setAuthenticated(true)
 
   useEffect(() => {
-    listVehicle(idVehicleMock)
+    if (params.vehicleId) {
+      listVehicle(params.vehicleId)
+    } else {
+      listVehicle(idCarNotFound)
+    }
   }, [])
 
   const imagemTeste = vehicle.images && vehicle.images[0].image
@@ -101,6 +105,7 @@ export default function DetailedVehicle() {
                         {vehicle?.km} KM
                       </Text>
                     </div>
+                    {/* <p>{params.vehicleId}</p> */}
 
                     <Button
                       color="var(--whiteFixed)"
