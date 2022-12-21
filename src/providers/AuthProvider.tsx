@@ -3,7 +3,8 @@ import {
   createContext,
   useContext,
   useEffect,
-  useState
+  useState,
+  Dispatch
 } from 'react'
 
 interface AuthContextProps {
@@ -13,6 +14,7 @@ interface AuthContextProps {
 interface AuthContextData {
   token: string
   authenticated: boolean
+  setAuthenticated: Dispatch<React.SetStateAction<boolean>>
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
@@ -39,7 +41,7 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
   }, [authenticated])
 
   return (
-    <AuthContext.Provider value={{ authenticated, token }}>
+    <AuthContext.Provider value={{ authenticated, token, setAuthenticated }}>
       {children}
     </AuthContext.Provider>
   )
