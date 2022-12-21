@@ -20,7 +20,7 @@ export interface IVehicle {
 }
 
 export interface IPropsVehicle {
-  props: IVehicle
+  props: { vehicle: IVehicle; isOwnerSellerPerfil: boolean; }
 }
 
 export interface IPropsVehicleIsActive {

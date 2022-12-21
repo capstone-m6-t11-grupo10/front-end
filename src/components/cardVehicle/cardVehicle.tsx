@@ -17,9 +17,9 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
     km,
     year,
     user
-  } = props
+  } = props.vehicle
 
-  const isOwnerSellerPerfil = true
+  const { isOwnerSellerPerfil } = props
 
   return (
     <Card
@@ -30,7 +30,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
       position="relative"
     >
       <IsActiveVehicle props={{ isActive }} />
-      <Image src={images} alt="Green double couch with wooden legs" />
+      <Image src={images[0].image} w='100%' objectFit='cover' maxH='215px' />
       <Heading
         noOfLines={1}
         m="15px 0px"
