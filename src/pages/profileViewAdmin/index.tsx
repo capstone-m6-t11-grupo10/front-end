@@ -1,12 +1,24 @@
 import { Box } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
+import { settingVehicles } from '../../services/api'
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
 
 const ProfileViewAdmin = () => {
-  const countCards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
+
+  useEffect(() => {
+    settingVehicles(setVehicles)
+  }, []);
+
+  const isOwnerSellerPerfil = true
+
+  const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
+  const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
 
   return (
     <Box w="100%">
@@ -14,8 +26,8 @@ const ProfileViewAdmin = () => {
 
       <UserArea />
 
-      <VehiclesCarousel title="Carros" vehicles={countCards} />
-      <VehiclesCarousel title="Motos" vehicles={countCards} />
+      <VehiclesCarousel props={propsCarro} />
+      <VehiclesCarousel props={propsMoto} />
 
       <Footer />
     </Box>

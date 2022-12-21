@@ -10,14 +10,14 @@ export interface IVehicle {
   type: string
   color: string
   plate: string
-  images: string
+  images: { image: string, id: string }[]
   km: number
   year: string
   user: IUser
 }
 
 export interface IPropsVehicle {
-  props: IVehicle
+  props: { vehicle: IVehicle; isOwnerSellerPerfil: boolean; }
 }
 
 export interface IPropsVehicleIsActive {
