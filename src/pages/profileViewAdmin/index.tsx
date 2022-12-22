@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
@@ -6,6 +6,7 @@ import { settingVehicles } from '../../services/api'
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
+import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
 
 const ProfileViewAdmin = () => {
 
@@ -20,17 +21,22 @@ const ProfileViewAdmin = () => {
   const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
   const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
 
-  return (
-    <Box w="100%">
-      <Header />
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-      <UserArea />
+  return (
+    <>
+      <Box w="100%">
+        <ModalCreateAd isOpen={isOpen} onClose={onClose} />
+        <Header />
+
+        <UserArea onOpen={onOpen} />
 
       <VehiclesCarousel props={propsCarro} />
       <VehiclesCarousel props={propsMoto} />
 
-      <Footer />
-    </Box>
+        <Footer />
+      </Box>
+    </>
   )
 }
 

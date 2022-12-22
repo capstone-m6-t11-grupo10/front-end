@@ -1,6 +1,10 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
 
-export const UserArea = () => {
+interface UserAreaProps {
+  onOpen: () => void
+}
+
+export const UserArea = ({ onOpen }: UserAreaProps) => {
   return (
     <Flex
       bgGradient="linear(to-b, var(--brand1) 55%, transparent  45%)"
@@ -64,6 +68,7 @@ export const UserArea = () => {
           fontWeight="600"
           fontSize="1.6rem"
           w="160px"
+          onClick={onOpen}
         >
           Criar anuncio
         </Button>

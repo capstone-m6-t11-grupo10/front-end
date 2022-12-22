@@ -4,8 +4,6 @@ import { IVehicle } from '../../interfaces/IVehicle'
 import { vehicleMocked } from '../../mocks/mocksVehicles'
 
 interface VehiclesCarousel {
-  // Alterar o tipo para array de veículos
-  //quando a integração com a API for feita
   props: {
     vehicles: IVehicle[]
 
