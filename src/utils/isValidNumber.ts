@@ -1,5 +1,7 @@
 export const isValidNumber = (value: string, isNotYear?: boolean) => {
   const isNumber = +value
+  console.log(value)
+  console.log(isNumber)
 
   if (typeof isNumber !== 'number' || Number.isNaN(isNumber)) return false
 

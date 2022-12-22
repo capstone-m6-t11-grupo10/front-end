@@ -7,8 +7,9 @@ import { Input } from '../../Input'
 import { Button } from './Button'
 import { createAdSchema } from '../../../schemas/advertisement'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { IVehicleCreated } from '../../../interfaces/IVehicle/index'
 import { isValidURL } from '../../../utils/validateUrl'
+import { mask, unMask } from 'remask'
+import { patterns } from '../../../utils/patternMaskPrice'
 
 interface CreateAd {
   title: string
@@ -17,7 +18,7 @@ interface CreateAd {
   description: string
   price: string
   image: string
-  extraImages: string
+  extraInputImages: string
 }
 
 interface CreateAdProps {
@@ -29,6 +30,14 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
   const [activeVehicle, setActiveVehicle] = useState('Carro')
   const [extraInput, setExtraInput] = useState<number[]>([])
   const [extraImages, setExtraImages] = useState<string[]>([])
+  const [maskValue, setMaskValue] = useState('')
+
+  const maskPrice = (inputValue: string) => {
+    const originalValue = unMask(inputValue)
+    const maskedValue = mask(originalValue, patterns)
+
+    setMaskValue(maskedValue)
+  }
 
   const handleExtraImages = () => {
     if (!!extraInput.length) {
@@ -63,12 +72,14 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
   }
 
   const handleCreateAd = (data: CreateAd) => {
+    const { image, extraInputImages, ...cleanData } = data
+
     const imagesExtra = urlSelector(extraImages)
-    console.log(data.image)
+
     const formateData = {
-      ...data,
+      ...cleanData,
       type: activeVehicle.toLowerCase(),
-      images: [data.image, data.extraImages, ...imagesExtra]
+      images: [image, extraInputImages, ...imagesExtra]
     }
 
     console.log(formateData)
@@ -132,11 +143,15 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
           </Flex>
           <Box>
             <Input
+              value={maskValue}
               label="Preço"
               placeholder="Digitar preço"
               w={['100%', '100%', '', '']}
               {...register('price')}
               error={errors.price}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                maskPrice(event.target.value)
+              }
             />
           </Box>
         </Flex>
@@ -175,8 +190,8 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
         <Input
           label="1º imagem da galeria"
           placeholder="Inserir URL da imagem"
-          {...register('extraImages')}
-          error={errors.extraImages}
+          {...register('extraInputImages')}
+          error={errors.extraInputImages}
         />
 
         {!!extraInput.length &&
