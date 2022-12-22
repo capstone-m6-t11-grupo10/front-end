@@ -1,6 +1,6 @@
 import { Box, Flex, Heading } from '@chakra-ui/react'
-import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
 import { vehicleMocked } from '../../mocks/mocksVehicles'
+import { CardVehicle } from '../../components/cardVehicle/CardVehicle'
 
 interface VehiclesCarousel {
   // Alterar o tipo para array de veículos

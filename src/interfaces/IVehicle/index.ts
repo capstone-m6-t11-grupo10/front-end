@@ -36,3 +36,12 @@ export interface IVehiclePosted {
   post: IPost
   userId: string
 }
+
+export interface IVehicleCreated {
+  description: string
+  km: string
+  price: string
+  title: string
+  year: string
+  type: string
+}
