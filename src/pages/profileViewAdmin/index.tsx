@@ -1,13 +1,25 @@
 import { Box, useDisclosure } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
+import { settingVehicles } from '../../services/api'
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
 import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
 
 const ProfileViewAdmin = () => {
-  const countCards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
+
+  useEffect(() => {
+    settingVehicles(setVehicles)
+  }, []);
+
+  const isOwnerSellerPerfil = true
+
+  const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
+  const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -19,8 +31,8 @@ const ProfileViewAdmin = () => {
 
         <UserArea onOpen={onOpen} />
 
-        <VehiclesCarousel title="Carros" vehicles={countCards} />
-        <VehiclesCarousel title="Motos" vehicles={countCards} />
+      <VehiclesCarousel props={propsCarro} />
+      <VehiclesCarousel props={propsMoto} />
 
         <Footer />
       </Box>

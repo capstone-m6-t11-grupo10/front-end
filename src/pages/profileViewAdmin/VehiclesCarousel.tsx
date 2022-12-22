@@ -1,16 +1,24 @@
 import { Box, Flex, Heading } from '@chakra-ui/react'
+import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
+import { IVehicle } from '../../interfaces/IVehicle'
 import { vehicleMocked } from '../../mocks/mocksVehicles'
-import { CardVehicle } from '../../components/cardVehicle/CardVehicle'
 
 interface VehiclesCarousel {
-  // Alterar o tipo para array de veículos
-  //quando a integração com a API for feita
-  vehicles: number[]
+  props: {
+    vehicles: IVehicle[]
 
-  title: string
+    title: string
+
+    isOwnerSellerPerfil: boolean
+  }
 }
 
-export const VehiclesCarousel = ({ title, vehicles }: VehiclesCarousel) => {
+
+export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
+
+  const { title, vehicles, isOwnerSellerPerfil } = props
+
+
   return (
     <Box paddingX={['25px', '45px']} mt="100px">
       <Heading as="h2" fontFamily="Lexend" fontSize="2.4rem" color="black">
@@ -35,8 +43,8 @@ export const VehiclesCarousel = ({ title, vehicles }: VehiclesCarousel) => {
           }
         }}
       >
-        {vehicles.map(() => (
-          <CardVehicle props={vehicleMocked} />
+        {vehicles.map((vehicle) => (
+          <CardVehicle key={vehicle.uuid} props={{ vehicle, isOwnerSellerPerfil }} />
         ))}
       </Flex>
     </Box>
