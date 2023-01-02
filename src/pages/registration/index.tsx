@@ -1,523 +1,320 @@
 import {
-  Button,
+  ButtonGroup,
   FormControl,
   FormHelperText,
-  FormLabel,
-  Input
+  Heading,
+  Text
 } from '@chakra-ui/react'
+
+import { Button } from '../../components/Modals/ModalCreateAd/Button'
+import { Input } from '../../components/Input'
 import { FieldError, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { validacoesYup } from '../../schemas'
+import { Flex, Box } from '@chakra-ui/react'
+import { Textarea } from '../../components/Textarea'
+import { Footer } from '../../components/Footer'
+import { Header } from '../../components/Header'
+import { Label } from './components/Label'
+import { useState } from 'react'
+import { mask, unMask } from 'remask'
+import {
+  cpfPattern,
+  birthDatePattern,
+  cepPattern,
+  phonePattern
+} from '../../utils/registerMasks'
+import { ICreateUser } from '../../interfaces/IUser'
+import { useUser } from '../../providers/UserProvider'
+import { createUserSchema } from '../../schemas/index'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export default function Registration() {
+  const [activeItem, setActiveItem] = useState('Comprador')
+  const [loading, setLoading] = useState(false)
+
+  const [maskCpf, setMaskCpf] = useState('')
+  const [maskPhone, setMaskPhone] = useState('')
+  const [maskBirthDate, setMaskBirthDate] = useState('')
+  const [maskCep, setMaskCep] = useState('')
+
+  const { signUp } = useUser()
+
+  const handleMaskCpf = (cpf: string) => {
+    const originalValue = unMask(cpf)
+    const maskedValue = mask(originalValue, cpfPattern)
+
+    setMaskCpf(maskedValue)
+  }
+
+  const handleMaskPhone = (phone: string) => {
+    const originalValue = unMask(phone)
+    const maskedValue = mask(originalValue, phonePattern)
+
+    setMaskPhone(maskedValue)
+  }
+
+  const handleMaskBirthDate = (date: string) => {
+    const originalValue = unMask(date)
+    const maskedValue = mask(originalValue, birthDatePattern)
+
+    setMaskBirthDate(maskedValue)
+  }
+
+  const handleMaskCep = (cep: string) => {
+    const originalValue = unMask(cep)
+    const maskedValue = mask(originalValue, cepPattern)
+
+    setMaskCep(maskedValue)
+  }
+
+  const handleActiveButton = (item: string) => {
+    setActiveItem(item)
+  }
+
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(validacoesYup) })
-  function onSubmit() {
-    console.log('foi')
+  } = useForm<ICreateUser>({
+    resolver: zodResolver(createUserSchema)
+  })
+
+  const handleForm = (data: ICreateUser) => {
+    console.log(data)
+
+    setLoading(true)
+    signUp(data)
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false))
   }
 
   return (
-    <FormControl
-      w={'411px'}
-      display={'flex'}
-      flexDirection={'column'}
-      justifyContent={'center'}
-      alignItems={'flex-start'}
-      padding={'44px 48px'}
-      gap={'32px'}
-      borderRadius={'4px'}
-      backgroundColor={'var(--grey10)'}
-      as="form"
-      onSubmit={handleSubmit(onSubmit)}
+    <Flex
+      w="100%"
+      flexDir="column"
+      justifyContent="space-between"
+      justifyItems="center"
+      gap="35px"
     >
-      <h2
-        style={{
-          color: '#000000',
-          fontWeight: '500',
-          fontSize: '24px',
-          lineHeight: '30px',
-          fontStyle: 'normal'
-        }}
-      >
-        Cadastro
-      </h2>
-      <p
-        style={{
-          color: '#000000',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '24px',
-          fontStyle: 'normal'
-        }}
-      >
-        Informações pessoais
-      </p>
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Nome
-      </FormLabel>
-
-      <Input
-        w={'315px'}
-        h={'48px'}
+      <Header />
+      <FormControl
+        alignSelf="center"
+        w={['90%', '70%', '411px', '411px']}
+        display={'flex'}
+        flexDirection={'column'}
+        justifyContent={'center'}
+        alignItems={'flex-start'}
+        padding={['22px 24px', '30px 35px']}
+        gap="20px"
         borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.name ? true : false}
-        type="name"
-        {...register('name')}
-        placeholder={'Ex: Samuel Leão'}
-      />
-      {!errors.name ? (
-        <FormHelperText>Entre com seu nome</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.name as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
+        backgroundColor={'var(--grey10)'}
+        as="form"
+        onSubmit={handleSubmit(handleForm)}
       >
-        Email
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.email ? true : false}
-        type="email"
-        {...register('email')}
-        placeholder={'Ex: samuel@kenzie.com.br'}
-      />
-      {!errors.email ? (
-        <FormHelperText>Entre com seu email</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.email as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        CPF
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.cpf ? true : false}
-        type="cpf"
-        {...register('cpf')}
-        placeholder={'000.000.000-00'}
-      />
-      {!errors.cpf ? (
-        <FormHelperText>Entre com seu cpf</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.cpf as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Telefone
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.tel ? true : false}
-        type="tel"
-        {...register('tel')}
-        placeholder={'(DDD)90000-0000'}
-      />
-      {!errors.tel ? (
-        <FormHelperText>Entre com seu telefone</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.tel as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Data de Aniversário
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.birthDate ? true : false}
-        type="birthDate"
-        {...register('birthDate')}
-        placeholder={'00/00/00'}
-      />
-      {!errors.birthDate ? (
-        <FormHelperText>Entre com sua data de aniversário</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.birthDate as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <p
-        style={{
-          color: '#000000',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '24px',
-          fontStyle: 'normal'
-        }}
-      >
-        Informações de Endereço
-      </p>
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        CEP
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.cep ? true : false}
-        type="cep"
-        {...register('cep')}
-        placeholder={'00000.000'}
-      />
-      {!errors.cep ? (
-        <FormHelperText>Entre com seu cep</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.cep as FieldError).message}
-        </FormHelperText>
-      )}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <FormLabel
-          style={{
-            color: 'var(--grey1)',
-            fontWeight: '500',
-            fontSize: '14px',
-            lineHeight: '17px',
-            fontStyle: 'normal'
-          }}
+        <Heading as="h2" fontWeight="500" fontSize="2.4rem" lineHeight="30px">
+          Cadastro
+        </Heading>
+        <Text
+          color="#000000"
+          fontWeight="500"
+          fontSize="1.4rem"
+          lineHeight="24px"
+          fontStyle="normal"
         >
-          Estado
-        </FormLabel>
+          Informações pessoais
+        </Text>
+        <Label content=" Nome" />
         <Input
-          w={'315px'}
-          h={'48px'}
-          borderRadius={'4px'}
-          padding={'0px 16px 0px 16px'}
-          gap={'10px'}
-          isInvalid={errors.state ? true : false}
-          type="state"
-          {...register('state')}
-          placeholder={'Digitar estado'}
+          mt="-10px"
+          error={errors.name}
+          {...register('name')}
+          placeholder="Ex: Samuel Leão"
         />
-        <>
-          {!errors.state ? (
-            <FormHelperText>Entre com seu estado</FormHelperText>
-          ) : (
-            <FormHelperText color="red">
-              {(errors.state as FieldError).message}
-            </FormHelperText>
-          )}
-        </>
+        <Label content="Email" />
+        <Input
+          mt="-10px"
+          error={errors.email}
+          {...register('email')}
+          placeholder={'Ex: samuel@kenzie.com.br'}
+        />
+        <Label content="CPF" />
+        <Input
+          value={maskCpf}
+          mt="-10px"
+          error={errors.cpf}
+          {...register('cpf')}
+          placeholder={'000.000.000-00'}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleMaskCpf(event.target.value)
+          }
+        />
+        <Label content="Celular" />
 
-        <>
-          <FormLabel
-            style={{
-              color: 'var(--grey1)',
-              fontWeight: '500',
-              fontSize: '14px',
-              lineHeight: '17px',
-              fontStyle: 'normal'
-            }}
-          >
-            Cidade
-          </FormLabel>
-          <Input
-            w={'315px'}
-            h={'48px'}
-            borderRadius={'4px'}
-            padding={'0px 16px 0px 16px'}
-            gap={'10px'}
-            isInvalid={errors.city ? true : false}
-            type="city"
-            {...register('city')}
-            placeholder={'Digitar cidade'}
+        <Input
+          value={maskPhone}
+          mt="-10px"
+          error={errors.phone}
+          {...register('phone')}
+          placeholder="(DDD) 90000-0000"
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleMaskPhone(event.target.value)
+          }
+        />
+        <Label content="Data de Nascimento" />
+
+        <Input
+          value={maskBirthDate}
+          mt="-10px"
+          error={errors.birthDate}
+          {...register('birthDate')}
+          placeholder={'00/00/00'}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleMaskBirthDate(event.target.value)
+          }
+        />
+        <Label content="Descrição" />
+
+        <Textarea
+          error={errors.bio}
+          mt="-10px"
+          {...register('bio')}
+          placeholder="Digitar descrição"
+          h="90px"
+        />
+        <Text
+          color="#000000"
+          fontWeight="500"
+          fontSize="1.4rem"
+          lineHeight="24px"
+          fontStyle="normal"
+          my="5px"
+        >
+          Informações de Endereço
+        </Text>
+        <Label content="CEP" />
+
+        <Input
+          value={maskCep}
+          mt="-10px"
+          error={errors.cep}
+          {...register('cep')}
+          placeholder="00000.000"
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleMaskCep(event.target.value)
+          }
+        />
+        <Flex w="100%" gap="10px">
+          <Box>
+            <Label content="Estado" />
+
+            <Input
+              error={errors.state}
+              {...register('state')}
+              placeholder={'Digitar estado'}
+            />
+          </Box>
+
+          <Box>
+            <Label content="Cidade" />
+            <Input
+              error={errors.city}
+              {...register('city')}
+              placeholder="Digitar cidade"
+            />
+          </Box>
+        </Flex>
+        <Label content="Rua" />
+
+        <Input
+          mt="-10px"
+          error={errors.street}
+          {...register('street')}
+          placeholder={'Digitar rua'}
+        />
+        <Flex w="100%" gap="10px">
+          <Box>
+            <Label content="Número" />
+
+            <Input
+              error={errors.number}
+              type="number"
+              {...register('number')}
+              placeholder={'Digitar número'}
+            />
+          </Box>
+          <Box>
+            <Label content="Complemento" />
+
+            <Input
+              error={errors.complement}
+              {...register('complement')}
+              placeholder={'Ex: apart 307'}
+            />
+          </Box>
+        </Flex>
+        <Text
+          color="#000000"
+          fontWeight="500"
+          fontSize="1.4rem"
+          lineHeight="24px"
+          fontStyle="normal"
+        >
+          Tipo de conta
+        </Text>
+
+        <ButtonGroup w="100%" display="flex" gap="10px">
+          <Button
+            fontSize={['1rem', '1.4rem']}
+            w="50%"
+            border="1px solid var(--grey4)"
+            isActive={activeItem === 'Comprador'}
+            onClick={e => handleActiveButton(e.currentTarget.innerText)}
+            content="Comprador"
           />
-          {!errors.city ? (
-            <FormHelperText>Entre com sua cidade</FormHelperText>
-          ) : (
-            <FormHelperText color="red">
-              {(errors.city as FieldError).message}
-            </FormHelperText>
-          )}
-        </>
-      </div>
 
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Rua
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.street ? true : false}
-        type="street"
-        {...register('street')}
-        placeholder={'Digitar rua'}
-      />
-      {!errors.street ? (
-        <FormHelperText>Entre com sua rua</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.street as FieldError).message}
-        </FormHelperText>
-      )}
+          <Button
+            fontSize={['1rem', '1.4rem']}
+            isActive={activeItem === 'Anunciante'}
+            onClick={e => handleActiveButton(e.currentTarget.innerText)}
+            w="50%"
+            border="1px solid var(--grey4)"
+            content="Anunciante"
+          />
+        </ButtonGroup>
 
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Número
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.number ? true : false}
-        type="number"
-        {...register('number')}
-        placeholder={'Digitar número'}
-      />
-      {!errors.number ? (
-        <FormHelperText>Entre com seu número</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.number as FieldError).message}
-        </FormHelperText>
-      )}
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Complemento
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.complement ? true : false}
-        type="complement"
-        {...register('complement')}
-        placeholder={'Ex: apart 307'}
-      />
-      {!errors.complement ? (
-        <FormHelperText>Entre com seu complemento</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.complement as FieldError).message}
-        </FormHelperText>
-      )}
+        <Label content="Senha" />
 
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Tipo de conta
-      </FormLabel>
-      <div style={{ display: 'flex' }}>
+        <Input
+          mt="-10px"
+          error={errors.password}
+          type="password"
+          {...register('password')}
+          placeholder={'Digitar Senha'}
+        />
+
+        <Label content="Confirmar senha" />
+        <Input
+          type="password"
+          mt="-10px"
+          error={errors.passwordConfirm}
+          {...register('passwordConfirm')}
+          placeholder={'Confirmar Senha'}
+        />
         <Button
-          w={'152px'}
-          h={'48px'}
-          padding={'12px 28px 12px 28px'}
-          gap={'10px'}
-          borderRadius={'4px'}
+          isLoading={loading}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          w="100%"
+          border="none"
           backgroundColor={'var(--brand1)'}
           color={'var(--whiteFixed)'}
-          fontWeight={600}
-          fontSize={'16px'}
-          marginRight={'10px'}
-        >
-          Comprador
-        </Button>
-        <Button
-          w={'152px'}
-          h={'48px'}
-          padding={'12px 28px 12px 28px'}
-          gap={'10px'}
-          borderRadius={'4px'}
-          borderStyle={'1px solid var(--grey4)'}
-          backgroundColor={'var(--grey4'}
-          color={'var(--grey0)'}
-          fontWeight={600}
-          fontSize={'16px'}
-          marginLeft={'10px'}
-        >
-          Anunciante
-        </Button>
-      </div>
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Senha
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.password ? true : false}
-        type="password"
-        {...register('password')}
-        placeholder={'Digitar Senha'}
-      />
-      {!errors.password ? (
-        <FormHelperText>Digite sua senha</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.password as FieldError).message}
-        </FormHelperText>
-      )}
-
-      <FormLabel
-        style={{
-          color: 'var(--grey1)',
-          fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '17px',
-          fontStyle: 'normal'
-        }}
-      >
-        Confirmar senha
-      </FormLabel>
-      <Input
-        w={'315px'}
-        h={'48px'}
-        borderRadius={'4px'}
-        padding={'0px 16px 0px 16px'}
-        gap={'10px'}
-        isInvalid={errors.passwordConfirm ? true : false}
-        type="passwordConfirm"
-        {...register('passwordConfirm')}
-        placeholder={'Confirmar Senha'}
-      />
-      {!errors.passwordConfirm ? (
-        <FormHelperText>Digite sua senha</FormHelperText>
-      ) : (
-        <FormHelperText color="red">
-          {(errors.passwordConfirm as FieldError).message}
-        </FormHelperText>
-      )}
-      <Button
-        w={'315px'}
-        h={'48px'}
-        padding={'12px 28px'}
-        gap={'10px'}
-        borderRadius={'4px'}
-        borderStyle={'1px solid var(--grey4)'}
-        backgroundColor={'var(--brand1)'}
-        color={'var(--whiteFixed)'}
-        fontWeight={600}
-        fontSize={'16px'}
-        marginLeft={'10px'}
-        type="submit"
-      >
-        Finalizar Cadastro
-      </Button>
-    </FormControl>
+          type="submit"
+          content="Finalizar Cadastro"
+        />
+      </FormControl>
+      <Footer />
+    </Flex>
   )
 }
