@@ -31,7 +31,7 @@ type OpenErrorModal = (value: boolean) => void
 interface UserContextData {
   user: IUser
   signUp: (
-    data: ICreateUser,
+    data: Omit<ICreateUser, 'passwordConfirm'>,
     onSuccessModalOpen: OpenSuccessModal,
     onErrorModalOpen: OpenErrorModal
   ) => Promise<void>
@@ -52,7 +52,7 @@ export const UserProvider = ({ children }: AuthContextProps) => {
 
   const signUp = useCallback(
     async (
-      data: ICreateUser,
+      data: Omit<ICreateUser, 'passwordConfirm'>,
       onSuccessModalOpen: OpenSuccessModal,
       onErrorModalOpen: OpenErrorModal
     ) => {

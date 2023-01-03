@@ -1,5 +1,5 @@
 import { unMask } from 'remask'
-import { z } from 'zod'
+import { nan, z } from 'zod'
 
 import * as yup from 'yup'
 
@@ -13,7 +13,10 @@ export const createUserSchema = z
     cpf: z
       .string()
       .min(11, 'Insira um CPF válido')
-      .transform(cpf => unMask(cpf)),
+      .max(14, 'Insira um CPF válido')
+      .transform(cpf => {
+        unMask(cpf)
+      }),
     phone: z
       .string()
       .min(11, 'Insira um número válido')
@@ -30,11 +33,29 @@ export const createUserSchema = z
       .string()
       .min(8, 'Insira um CEP válido')
       .transform(cep => unMask(cep)),
-    state: z.string().min(1, 'Preencher campo cidade é obrigatório'),
-    city: z.string().min(1, 'Preencher campo cidade é obrigatório'),
-    street: z.string().min(1, 'Preencher campo rua é obrigatório'),
-    number: z.string().min(1, 'Preencher campo número é obrigatório'),
-    complement: z.string().min(1, 'Preencher campo complemento é obrigatório'),
+    state: z
+      .string({ required_error: 'Preencha o campo CEP' })
+      .min(1, 'Preencher campo cidade é obrigatório'),
+    city: z
+      .string({ required_error: 'Preencha o campo CEP' })
+      .min(1, 'Preencher campo cidade é obrigatório'),
+    street: z
+      .string({ required_error: 'Preencha o campo CEP' })
+      .min(1, 'Preencher campo rua é obrigatório'),
+    number: z
+      .string()
+      .min(1, 'Preencher campo número é obrigatório')
+      .refine(number => {
+        const numberCast = +number
+
+        if (Number.isInteger(numberCast) || number.toLowerCase() === 's/n') {
+          console.log('foi')
+          return true
+        }
+
+        return false
+      }, 'Informe um número válido, se seu endereço não possui um número insira S/N'),
+    complement: z.string().optional(),
     password: z
       .string()
       .regex(

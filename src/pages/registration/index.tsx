@@ -1,16 +1,9 @@
-import {
-  ButtonGroup,
-  FormControl,
-  FormHelperText,
-  Heading,
-  Text
-} from '@chakra-ui/react'
+import { ButtonGroup, FormControl, Heading, Text } from '@chakra-ui/react'
 
 import { Button } from '../../components/Modals/ModalCreateAd/Button'
 import { Input } from '../../components/Input'
-import { FieldError, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { validacoesYup } from '../../schemas'
+import { useForm } from 'react-hook-form'
+
 import { Flex, Box, useDisclosure } from '@chakra-ui/react'
 import { Textarea } from '../../components/Textarea'
 import { Footer } from '../../components/Footer'
@@ -24,6 +17,7 @@ import {
   cepPattern,
   phonePattern
 } from '../../utils/registerMasks'
+
 import { ICreateUser } from '../../interfaces/IUser'
 import { useUser } from '../../providers/UserProvider'
 import { createUserSchema } from '../../schemas/index'
@@ -32,7 +26,7 @@ import { ModalSuccessRegister } from '../../components/Modals/ModalSuccessRegist
 import { ModalErrorRegister } from '../../components/Modals/ModalErrorRegister'
 
 export default function Registration() {
-  const [activeItem, setActiveItem] = useState('Comprador')
+  const [accountType, setAccountType] = useState('Comprador')
   const [loading, setLoading] = useState(false)
 
   const [maskCpf, setMaskCpf] = useState('')
@@ -41,6 +35,30 @@ export default function Registration() {
   const [maskCep, setMaskCep] = useState('')
 
   const { signUp } = useUser()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    setFocus,
+    setError,
+    clearErrors
+  } = useForm<ICreateUser>({
+    resolver: zodResolver(createUserSchema)
+  })
+
+  const {
+    isOpen: isSuccessModalOpen,
+    onClose: onSuccessModalClose,
+    onOpen: onSuccessModalOpen
+  } = useDisclosure()
+
+  const {
+    isOpen: isErrorModalOpen,
+    onClose: onErrorModalClose,
+    onOpen: onErrorModalOpen
+  } = useDisclosure()
 
   const handleMaskCpf = (cpf: string) => {
     const originalValue = unMask(cpf)
@@ -71,38 +89,45 @@ export default function Registration() {
   }
 
   const handleActiveButton = (item: string) => {
-    setActiveItem(item)
+    setAccountType(item)
   }
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<ICreateUser>({
-    resolver: zodResolver(createUserSchema)
-  })
+  const autoCompleteAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const cep = unMask(event.target.value)
 
-  const {
-    isOpen: isSuccessModalOpen,
-    onClose: onSuccessModalClose,
-    onOpen: onSuccessModalOpen
-  } = useDisclosure()
+    fetch(`https://viacep.com.br/ws/${cep}/json`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.erro) {
+          throw new Error()
+        }
 
-  const {
-    isOpen: isErrorModalOpen,
-    onClose: onErrorModalClose,
-    onOpen: onErrorModalOpen
-  } = useDisclosure()
+        const { localidade, logradouro, uf } = data
+
+        setValue('state', uf)
+        setValue('city', localidade)
+        setValue('street', logradouro)
+
+        setFocus('number')
+        clearErrors(['cep', 'state', 'city', 'street'])
+      })
+      .catch(() => {
+        setError('cep', {
+          type: 'disabled',
+          message: 'Insira uma CEP válido'
+        })
+      })
+  }
 
   const handleForm = (data: ICreateUser) => {
-    console.log(data)
-
     setLoading(true)
-    signUp(data, onSuccessModalOpen, onErrorModalOpen)
-      .then(() => {
-        setLoading(false)
-      })
 
+    const { passwordConfirm, ...cleanData } = data
+
+    const formateData = { ...cleanData, isSeller: accountType === 'Anunciante' }
+
+    signUp(formateData, onSuccessModalOpen, onErrorModalOpen)
+      .then(() => setLoading(false))
       .catch(() => setLoading(false))
   }
 
@@ -221,20 +246,24 @@ export default function Registration() {
           <Label content="CEP" />
 
           <Input
+            onBlurCapture={autoCompleteAddress}
             value={maskCep}
             mt="-10px"
             error={errors.cep}
             {...register('cep')}
             placeholder="00000-000"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleMaskCep(event.target.value)
-            }
+            }}
           />
           <Flex w="100%" gap="10px">
             <Box>
               <Label content="Estado" />
 
               <Input
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={true}
+                title="Preencha o campo CEP"
                 error={errors.state}
                 {...register('state')}
                 placeholder={'Digitar estado'}
@@ -244,6 +273,9 @@ export default function Registration() {
             <Box>
               <Label content="Cidade" />
               <Input
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={true}
+                title="Preencha o campo CEP"
                 error={errors.city}
                 {...register('city')}
                 placeholder="Digitar cidade"
@@ -253,6 +285,9 @@ export default function Registration() {
           <Label content="Rua" />
 
           <Input
+            _disabled={{ cursor: 'not-allowed' }}
+            isDisabled={true}
+            title="Preencha o campo CEP"
             mt="-10px"
             error={errors.street}
             {...register('street')}
@@ -264,7 +299,6 @@ export default function Registration() {
 
               <Input
                 error={errors.number}
-                type="number"
                 {...register('number')}
                 placeholder={'Digitar número'}
               />
@@ -294,14 +328,14 @@ export default function Registration() {
               fontSize={['1rem', '1.4rem']}
               w="50%"
               border="1px solid var(--grey4)"
-              isActive={activeItem === 'Comprador'}
+              isActive={accountType === 'Comprador'}
               onClick={e => handleActiveButton(e.currentTarget.innerText)}
               content="Comprador"
             />
 
             <Button
               fontSize={['1rem', '1.4rem']}
-              isActive={activeItem === 'Anunciante'}
+              isActive={accountType === 'Anunciante'}
               onClick={e => handleActiveButton(e.currentTarget.innerText)}
               w="50%"
               border="1px solid var(--grey4)"

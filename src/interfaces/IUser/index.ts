@@ -55,4 +55,5 @@ export interface ICreateUser {
   complement: string
   password: string
   passwordConfirm: string
+  isSeller: boolean
 }
