@@ -25,9 +25,17 @@ interface IUser {
   isSeller: boolean
 }
 
+type OpenSuccessModal = (value: boolean) => void
+type OpenErrorModal = (value: boolean) => void
+
 interface UserContextData {
   user: IUser
-  signUp: (data: ICreateUser) => Promise<void>
+  signUp: (
+    data: ICreateUser,
+    onSuccessModalOpen: OpenSuccessModal,
+    onErrorModalOpen: OpenErrorModal
+  ) => Promise<void>
+  error: string
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData)
@@ -40,16 +48,30 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: AuthContextProps) => {
   const [user, setUser] = useState<IUser>({} as IUser)
+  const [error, setError] = useState('')
 
-  const signUp = useCallback(async (data: ICreateUser) => {
-    const response = await api
-      .post('users', data)
-      .then(res => setUser(res.data))
-      .catch(err => console.log(err))
-  }, [])
+  const signUp = useCallback(
+    async (
+      data: ICreateUser,
+      onSuccessModalOpen: OpenSuccessModal,
+      onErrorModalOpen: OpenErrorModal
+    ) => {
+      await api
+        .post('users', data)
+        .then(res => {
+          onSuccessModalOpen(true)
+          setUser(res.data)
+        })
+        .catch(err => {
+          onErrorModalOpen(true)
+          setError(err.response.data.message)
+        })
+    },
+    []
+  )
 
   return (
-    <UserContext.Provider value={{ user, signUp }}>
+    <UserContext.Provider value={{ user, signUp, error }}>
       {children}
     </UserContext.Provider>
   )
