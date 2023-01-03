@@ -14,7 +14,7 @@ import {
   useState
 } from 'react'
 
-import { FieldError } from 'react-hook-form'
+import { FieldError, useForm } from 'react-hook-form'
 
 interface InputProps extends ChakraInputProps {
   name: string
@@ -55,7 +55,7 @@ export const InputBase: ForwardRefRenderFunction<
 
   const handleInputBlur = useCallback(() => {
     if (value.length > 1 && !error) {
-      return setVariant('filled')
+      return setVariant('focus')
     }
   }, [error, value])
 

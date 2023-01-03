@@ -56,7 +56,7 @@ export const TextareaBase: ForwardRefRenderFunction<
 
   const handleTextareaBlur = useCallback(() => {
     if (value.length > 1 && !error) {
-      return setVariant('filled')
+      return setVariant('focus')
     }
   }, [error, value])
 
