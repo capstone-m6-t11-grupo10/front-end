@@ -19,7 +19,7 @@ import { FieldError } from 'react-hook-form'
 interface InputProps extends ChakraInputProps {
   name: string
   placeholder: string
-  label: string
+  label?: string
   error?: FieldError | null
 }
 
@@ -61,7 +61,7 @@ export const InputBase: ForwardRefRenderFunction<
 
   return (
     <FormControl isInvalid={!!error}>
-      <FormLabel>{label}</FormLabel>
+      {!!label && <FormLabel>{label}</FormLabel>}
       <InputGroup flexDir="column">
         <ChakraInput
           name={name}
@@ -74,10 +74,10 @@ export const InputBase: ForwardRefRenderFunction<
           border="1.5px solid var(--grey7)"
           borderRadius="4px"
           h="48px"
-          px="16px"
+          px={['10px', '16px']}
           _placeholder={{
             fontWeight: '400',
-            fontSize: '1.5rem',
+            fontSize: ['1rem', '1.2rem', '1.5rem'],
             color: 'var(--grey3)'
           }}
           onFocus={handleInputFocus}
