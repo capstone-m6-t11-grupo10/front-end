@@ -30,7 +30,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
       position="relative"
     >
       <IsActiveVehicle props={{ isActive }} />
-      <Image src={images[0].image} w='100%' objectFit='cover' maxH='215px' />
+      <Image src={images[0].image} w='100%' objectFit='cover' h='215px' />
       <Heading
         noOfLines={1}
         m="15px 0px"

@@ -14,17 +14,41 @@ import {
   Textarea
 } from '@chakra-ui/react'
 import React from 'react'
+import { FaPencilAlt } from 'react-icons/fa'
+import { useForm } from 'react-hook-form'
+import { Form } from 'react-router-dom'
+import { IUser, IUserEdit } from '../../../interfaces/IUser'
+import { edittingProfile } from '../../../services/api'
 
-export const ModalAdminEditProfile = () => {
+
+interface IModalEditProps {
+  props: {
+    userInfo: IUser,
+    setUserInfo: React.Dispatch<React.SetStateAction<IUser>>
+  }
+}
+
+export const ModalAdminEditProfile = ({ props }: IModalEditProps) => {
+  const { userInfo, setUserInfo } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const id = userInfo.id
 
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
+  const { handleSubmit, register } = useForm<IUserEdit>({
+    mode: 'onBlur',
+  })
+
+  const onSubmit = (data: IUserEdit) => {
+    edittingProfile({ data, setUserInfo, id })
+  }
+
   return (
     <>
       {/* apagar a linha 26 após implementação do modal no local correto */}
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button onClick={onOpen}> < FaPencilAlt /> </Button>
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -33,93 +57,84 @@ export const ModalAdminEditProfile = () => {
         size="2xl"
       >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader fontSize={'1em'}>Editar perfil</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={8}>
-            <FormControl>
+        <FormControl
+          as="form"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <ModalContent>
+            <ModalHeader fontSize={'1em'}>Editar perfil</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={8}>
               <FormLabel fontSize={'.8em'}>Nome</FormLabel>
               <Input
+                {...register('name')}
                 type={'text'}
                 size="lg"
-                ref={initialRef}
-                placeholder="Samuel Leão da Silva"
+                placeholder={userInfo.name}
                 focusBorderColor="#5126EA"
               />
-            </FormControl>
 
-            <FormControl mt={8}>
               <FormLabel fontSize={'.8em'}>Email</FormLabel>
               <Input
+                {...register('email')}
                 type={'email'}
                 size="lg"
-                placeholder="samuel@kenzie.com.br"
+                placeholder={userInfo.email}
                 focusBorderColor="#5126EA"
               />
-            </FormControl>
 
-            <FormControl mt={8}>
-              <FormLabel fontSize={'.8em'}>CPF</FormLabel>
-              <Input
-                type={'number'}
-                size="lg"
-                placeholder="900.880.090-00"
-                focusBorderColor="#5126EA"
-              />
-            </FormControl>
-
-            <FormControl mt={8}>
               <FormLabel fontSize={'.8em'}>Celular</FormLabel>
               <Input
+                {...register('phone')}
                 type={'tel'}
                 size="lg"
-                placeholder="(084) 90909-9092"
+                placeholder={userInfo.phone}
                 focusBorderColor="#5126EA"
               />
-            </FormControl>
 
-            <FormControl mt={8}>
               <FormLabel fontSize={'.8em'}>Data de nascimento</FormLabel>
               <Input
+                {...register('birthDate')}
                 type="date"
                 size="lg"
-                placeholder="09/12/1999"
+                placeholder={userInfo.birthDate}
                 focusBorderColor="#5126EA"
               />
-            </FormControl>
 
-            <FormControl mt={8}>
-              <FormLabel fontSize={'.8em'}>Descrição</FormLabel>
+              <FormLabel fontSize={'.8em'}
+                {...register('bio')}
+              >Descrição</FormLabel>
               <Textarea focusBorderColor="#5126EA" />
-            </FormControl>
-          </ModalBody>
+            </ModalBody>
 
-          <ModalFooter>
-            <Button
-              height="2.5em"
-              width="8em"
-              mr={3}
-              bgColor="var(--grey6)"
-              color="var(--grey2)"
-              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-              fontSize="1em"
-              onClick={onClose}
-            >
-              Cancelar
-            </Button>
-            <Button
-              width="12em"
-              height="2.5em"
-              bgColor="var(--brand1)"
-              color="var(--whiteFixed)"
-              transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-              fontSize="1em"
-              _hover={{ bg: '#B0A6F0' }}
-            >
-              Salvar alterações
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+            <ModalFooter>
+              <Button
+                height="2.5em"
+                width="8em"
+                mr={3}
+                bgColor="var(--grey6)"
+                color="var(--grey2)"
+                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                fontSize="1em"
+                onClick={onClose}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type='submit'
+                width="12em"
+                height="2.5em"
+                bgColor="var(--brand1)"
+                color="var(--whiteFixed)"
+                transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+                fontSize="1em"
+                _hover={{ bg: '#B0A6F0' }}
+              >
+                Salvar alterações
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </FormControl>
       </Modal>
     </>
   )

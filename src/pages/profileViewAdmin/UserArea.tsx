@@ -1,10 +1,13 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
-
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
+import { IUser } from '../../interfaces/IUser'
 interface UserAreaProps {
-  onOpen: () => void
+  userInfo: IUser,
+  setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
+  onOpen: () => void,
 }
 
-export const UserArea = ({ onOpen }: UserAreaProps) => {
+export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
   return (
     <Flex
       bgGradient="linear(to-b, var(--brand1) 55%, transparent  45%)"
@@ -38,7 +41,8 @@ export const UserArea = ({ onOpen }: UserAreaProps) => {
             fontWeight="600"
             fontSize={['1.5rem', '2rem']}
           >
-            Samuel Leão{' '}
+            <ModalAdminEditProfile props={{ setUserInfo, userInfo }} />
+            {' '}{userInfo.name}{' '}
             <Text
               display="inline-block"
               fontWeight="500"
@@ -53,9 +57,7 @@ export const UserArea = ({ onOpen }: UserAreaProps) => {
           </Text>
         </Box>
         <Text color="var(--grey2)" fontWeight="400" fontSize="1.2rem">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s
+          {userInfo.bio}
         </Text>
 
         <Button
