@@ -14,9 +14,7 @@ export const createUserSchema = z
       .string()
       .min(11, 'Insira um CPF válido')
       .max(14, 'Insira um CPF válido')
-      .transform(cpf => {
-        unMask(cpf)
-      }),
+      .transform(cpf => unMask(cpf)),
     phone: z
       .string()
       .min(11, 'Insira um número válido')
