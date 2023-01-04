@@ -40,13 +40,10 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
   }
 
   const handleExtraImages = () => {
-    if (!!extraInput.length) {
-      return setExtraInput([
-        ...extraInput,
-        extraInput[extraInput.length - 1] + 1
-      ])
+    if (!!!extraInput.length) {
+      return setExtraInput([...extraInput, 1])
     }
-    return setExtraInput([...extraInput, 1])
+    return setExtraInput([...extraInput, extraInput[extraInput.length - 1] + 1])
   }
 
   const handleClick = (item: string) => {
@@ -81,8 +78,6 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
       type: activeVehicle.toLowerCase(),
       images: [image, extraInputImages, ...imagesExtra]
     }
-
-    console.log(formateData)
   }
 
   return (
@@ -195,12 +190,12 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
         />
 
         {!!extraInput.length &&
-          extraInput.map(() => (
+          extraInput.map(inputIndex => (
             <Input
               onChangeCapture={e =>
                 setExtraImages([...extraImages, e.currentTarget.value])
               }
-              key={extraInput[extraInput.length - 1]}
+              key={inputIndex}
               label="Imagem extra"
               placeholder="Inserir URL da imagem"
               name="imageUrl"
