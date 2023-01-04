@@ -6,12 +6,20 @@ export interface IUser {
     name: string
     birthDate: string
     image: string
-    phoneNumber: string
+    email: string
+    phone: string
     password: string
     isActive: boolean
     addressId: string
     cpf: string
     isSeller: boolean
+    bio: string
+}
+export interface IUserEdit {
+    name: string
+    birthDate: string
+    email: string
+    phone: string
     bio: string
 }
 export interface IUserAddressed {
