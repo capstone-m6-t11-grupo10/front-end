@@ -1,5 +1,5 @@
-import { IAddress } from "../IAddress"
-import { IVehiclePosted } from "../IVehicle"
+import { IAddress } from '../IAddress'
+import { IVehiclePosted } from '../IVehicle'
 
 export interface IUser {
     uuid: string
@@ -46,4 +46,22 @@ export interface IPropsUserVehicles {
         user: IUserAddressed
         vehicles: IVehiclePosted[]
     }
+}
+
+export interface ICreateUser {
+    name: string
+    email: string
+    cpf: string
+    phone: string
+    birthDate: string
+    bio: string
+    cep: string
+    state: string
+    city: string
+    street: string
+    number: string
+    complement: string
+    password: string
+    passwordConfirm: string
+    isSeller: boolean
 }

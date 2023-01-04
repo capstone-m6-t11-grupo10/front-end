@@ -20,7 +20,7 @@ import { FieldError } from 'react-hook-form'
 interface TextAreaProps extends ChakraTextAreaProps {
   name?: string
   placeholder: string
-  label: string
+  label?: string
   error?: FieldError | null
 }
 
@@ -56,13 +56,13 @@ export const TextareaBase: ForwardRefRenderFunction<
 
   const handleTextareaBlur = useCallback(() => {
     if (value.length > 1 && !error) {
-      return setVariant('filled')
+      return setVariant('focus')
     }
   }, [error, value])
 
   return (
     <FormControl isInvalid={!!error}>
-      <FormLabel>{label}</FormLabel>
+      {!!label && <FormLabel>{label}</FormLabel>}
 
       <InputGroup flexDir="column">
         <ChakraTextarea
@@ -79,7 +79,7 @@ export const TextareaBase: ForwardRefRenderFunction<
           px="16px"
           _placeholder={{
             fontWeight: '400',
-            fontSize: '1.6rem',
+            fontSize: ['1rem', '1.2rem', '1.5rem'],
             color: 'var(grey3)'
           }}
           onFocus={handleTextareaFocus}

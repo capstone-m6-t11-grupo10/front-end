@@ -16,7 +16,7 @@ export const Footer = () => {
       padding={['20px 10px', '20px 10px', '30px 59px']}
       color="var(--whiteFixed)"
       maxW="1600px"
-      mt="80px"
+      mt="40px"
       bg="var(--grey0)"
     >
       <Image src={Logo} alt="Motors Shop" />
