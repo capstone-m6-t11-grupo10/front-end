@@ -3,12 +3,18 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 export const BannerHome = () => {
   return (
     <Flex
-      bgGradient="linear(to-b, var(--brand1) 55%, transparent  45%)"
+      alignItems="center"
+      bgGradient="linear(to-b, var(--brand1) 95%, transparent  5%)"
       justify="center"
-      width="100vw"
-      height="80vh"
+      width="100%"
+      h="60vh"
     >
-      <Flex mt="4em" flexDirection="column" alignItems="center" gap={10}>
+      <Flex
+        alignSelf="center"
+        flexDirection="column"
+        alignItems="center"
+        gap={10}
+      >
         <Text
           as="h2"
           color="var(--whiteFixed)"

@@ -35,7 +35,7 @@ const Home = () => {
   return (
     <Flex w="100%" flexDir="column" justifyItems="center">
       <Header />
-      {/* <BannerHome /> */}
+      <BannerHome />
       <VehiclesCarousel props={propsLeilao} />
       <VehiclesCarousel props={propsCarro} />
       <VehiclesCarousel props={propsMoto} />
