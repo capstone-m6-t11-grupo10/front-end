@@ -19,8 +19,33 @@ export interface IVehicle {
   user: IUser
 }
 
+export interface IVehicleLeilao {
+  uuid: string
+  title: string
+  time: string
+  description: string
+  price: string
+  image: string
+  km: number
+  year: string
+  user: IUser
+}
+export interface IVehicleLeilaoProps {
+  props: {
+    uuid: string
+    title: string
+    time: string
+    description: string
+    price: string
+    image: string
+    km: number
+    year: string
+    user: IUser
+  }
+}
+
 export interface IPropsVehicle {
-  props: { vehicle: IVehicle; isOwnerSellerPerfil: boolean; }
+  props: { vehicle: IVehicle; isOwnerSellerPerfil: boolean }
 }
 
 export interface IPropsVehicleIsActive {
