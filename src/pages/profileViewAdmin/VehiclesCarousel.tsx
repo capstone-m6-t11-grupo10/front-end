@@ -1,23 +1,24 @@
 import { Box, Flex, Heading } from '@chakra-ui/react'
 import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
-import { IVehicle } from '../../interfaces/IVehicle'
+import { CardVehicleLeilao } from '../../components/cardVehicle/cardVehicleLeilao'
+import { vehiclesList } from '../../components/mockLeilao'
+import { IVehicle, IVehicleLeilao } from '../../interfaces/IVehicle'
 import { vehicleMocked } from '../../mocks/mocksVehicles'
 
 interface VehiclesCarousel {
   props: {
-    vehicles: IVehicle[]
+    vehicles?: IVehicle[]
 
     title: string
 
     isOwnerSellerPerfil: boolean
+
+    leilao?: IVehicleLeilao[]
   }
 }
 
-
 export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
-
-  const { title, vehicles, isOwnerSellerPerfil } = props
-
+  const { title, vehicles, isOwnerSellerPerfil, leilao } = props
 
   return (
     <Box paddingX={['25px', '45px']} mt="100px">
@@ -26,7 +27,7 @@ export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
       </Heading>
 
       <Flex
-        overflow="auto"
+        overflowY="auto"
         w="100%"
         justifyContent="flex-start"
         maxW="1600px"
@@ -43,8 +44,14 @@ export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
           }
         }}
       >
-        {vehicles.map((vehicle) => (
-          <CardVehicle key={vehicle.uuid} props={{ vehicle, isOwnerSellerPerfil }} />
+        {leilao?.map(vehicle => (
+          <CardVehicleLeilao key={vehicle.uuid} props={vehicle} />
+        ))}
+        {vehicles?.map(vehicle => (
+          <CardVehicle
+            key={vehicle.uuid}
+            props={{ vehicle, isOwnerSellerPerfil }}
+          />
         ))}
       </Flex>
     </Box>
