@@ -28,11 +28,11 @@ export const Header = () => {
   } = useDisclosure()
 
   return (
-    <Flex as="nav">
+    <Flex as="nav" width="100%">
       <Flex
         h="100px"
         paddingX={['25px', '45px']}
-        w="100vw"
+        w="100%"
         maxW="1600px"
         bg="var(--grey10)"
         justifyContent="space-between"
@@ -62,10 +62,10 @@ export const Header = () => {
               <User onToggle={onMenuToggle} />
             ) : (
               <>
-                <NavItem content="Fazer login" redirectTo="/" />
+                <NavItem content="Fazer login" redirectTo="/login" />
                 <NavItem
                   content="Cadastrar"
-                  redirectTo="/"
+                  redirectTo="/registration"
                   color="var(--grey0)"
                   border="1px solid var(--grey4)"
                   padding="20px"
