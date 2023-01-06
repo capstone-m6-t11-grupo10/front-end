@@ -18,6 +18,7 @@ export const Footer = () => {
       maxW="1600px"
       mt="40px"
       bg="var(--grey0)"
+      w="100%"
     >
       <Image src={Logo} alt="Motors Shop" />
       <Text fontWeight="400" fontSize={['1.2rem', '1.4rem']} textAlign="center">
