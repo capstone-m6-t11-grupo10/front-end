@@ -1,6 +1,12 @@
 import { IPost } from "../IPost"
 import { IUser } from "../IUser"
 
+export interface IComment {
+    id: string
+    comment: string
+    dateCreated: string
+    user: IUser
+}
 export interface IComent {
     uuid: string
     content: string

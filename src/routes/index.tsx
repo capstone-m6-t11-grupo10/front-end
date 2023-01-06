@@ -24,8 +24,6 @@ const Router = () => {
 
         <Route path="/registration" element={<Registration />} />
 
-        <Route path="/edit-profile" element={<ModalAdminEditProfile />} />
-
         <Route path="/login" element={<Login />} />
 
         <Route path="/profile" element={<ProfileViewAdmin />} />
