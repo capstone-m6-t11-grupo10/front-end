@@ -1,5 +1,7 @@
 import { IAddress } from '../IAddress'
 import { IVehiclePosted } from '../IVehicle'
+import { Dispatch, SetStateAction } from 'react';
+
 
 export interface IUser {
     uuid: string
@@ -64,4 +66,13 @@ export interface ICreateUser {
     password: string
     passwordConfirm: string
     isSeller: boolean
+}
+
+export interface IBodyEdit {
+    [key: string]: any;
+}
+export interface IBodyEditProps {
+    data: IBodyEdit
+    setUserInfo: Dispatch<SetStateAction<IUser>>
+    id: string
 }

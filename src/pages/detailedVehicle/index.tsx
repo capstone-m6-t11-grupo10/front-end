@@ -15,25 +15,47 @@ import { useParams } from 'react-router-dom'
 import { Footer } from '../../components/Footer'
 //essa funcao vai retornar os valores para meu front
 import { UseVehicle } from '../../providers/vehicleProvider'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../../providers/AuthProvider'
+import { gettingComments, postingComment } from '../../services/api'
+import { Comments } from './comments'
+import { commentsMocked } from '../../mocks/mocksComments'
 export default function DetailedVehicle() {
   const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
+
   const params = useParams()
   const { listVehicle, vehicle } = UseVehicle()
+
+  const [text, setText] = useState("");
+  const [comments, setComments] = useState(commentsMocked)
+
 
   const { setAuthenticated } = useAuth()
   setAuthenticated(true)
 
+  const idVehicle: string = params.vehicleId || ''
+  const tokenUser: string = localStorage.getItem('tokenUser') || ''
+
   useEffect(() => {
-    if (params.vehicleId) {
-      listVehicle(params.vehicleId)
+    if (idVehicle) {
+      listVehicle(idVehicle)
     } else {
       listVehicle(idCarNotFound)
     }
+    gettingComments({ id: idVehicle, setComments })
+
   }, [])
 
   const imagemTeste = vehicle.images && vehicle.images[0].image
+
+
+  const handleCommentButton = async () => {
+    await postingComment(text, idVehicle, tokenUser)
+    gettingComments({ id: idVehicle, setComments })
+    setText('')
+
+  }
+
   return (
     <Box w="100%">
       <Flex
@@ -140,48 +162,8 @@ export default function DetailedVehicle() {
               </Text>
             </Card>
 
-            <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
-              <h2
-                style={{
-                  color: 'var(--grey1)',
-                  fontWeight: '600',
-                  marginBottom: '2rem'
-                }}
-              >
-                Comentários
-              </h2>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div>
-                  <img
-                    src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                    alt="Green double couch with wooden legs"
-                    style={{
-                      borderRadius: '100%',
-                      width: '60px',
-                      height: '60px'
-                    }}
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <Text marginLeft="2rem"> Nome da pessoa</Text>
+            <Comments comments={comments} />
 
-                  <Text marginLeft="2rem"> Há tantos dias atras</Text>
-                </div>
-              </div>
-
-              <Text marginTop="2rem">
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English. Many
-                desktop publishing packages and web page editors now use Lorem
-                Ipsum as their default model text, and a search for 'lorem
-                ipsum' will uncover many web sites still in their infancy.
-                Various versions have evolved over the years, sometimes by
-                accident, sometimes on purpose (injected humour and the like).
-              </Text>
-            </Card>
             <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <img
@@ -195,13 +177,18 @@ export default function DetailedVehicle() {
                 />
                 <Text marginLeft="2rem">Samuel Tigre</Text>
               </div>
-              <textarea style={{ height: '100px', resize: 'none' }}></textarea>
+              <textarea value={text}
+                onChange={(e) => setText(e.target.value)}
+                style={{ height: '100px', resize: 'none' }}>
+              </textarea>
               <Button
-                marginTop="2rem"
-                w="100px"
-                variant="solid"
-                bg="var(--brand1)"
-                color="var(--whiteFixed)"
+                marginTop='2rem'
+                w='100px'
+                variant='solid'
+                bg='var(--brand1)'
+                color='var(--whiteFixed)'
+                type='submit'
+                onClick={handleCommentButton}
               >
                 Comentar
               </Button>

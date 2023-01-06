@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { Dispatch, SetStateAction } from 'react';
 import { map, object, string } from 'zod';
-import { IUser, IUserEdit } from '../interfaces/IUser';
+import { IComment } from '../interfaces/coments';
+import { IBodyEdit, IBodyEditProps, IUser, IUserEdit } from '../interfaces/IUser';
 
 const baseUrl = 'http://localhost:3000/'
 
@@ -26,14 +27,7 @@ export const settingProfileView = async ({ setUserInfo, id }: any) => {
 }
 
 
-interface IBodyEdit {
-  [key: string]: any;
-}
-interface IBodyEditProps {
-  data: IBodyEdit
-  setUserInfo: Dispatch<SetStateAction<IUser>>
-  id: string
-}
+
 
 export const edittingProfile = async (props: IBodyEditProps) => {
   const { data, setUserInfo, id } = props
@@ -48,11 +42,30 @@ export const edittingProfile = async (props: IBodyEditProps) => {
     }
   })
 
-  console.log(body)
   const response = await api.patch("http://localhost:3000/users/" + id, body).then((response) => {
     setUserInfo(response.data)
-    console.log(response)
   });
 }
+
+export const postingComment = async (text: string, idVehicle: string, tokenUser: string) => {
+  const header = {
+    headers: {
+      Authorization: `Bearer ${tokenUser}`,
+    },
+  }
+
+  const response = await api.post(`http://localhost:3000/comments/${idVehicle}`, { comment: text }, header)
+  return response
+}
+
+export interface IGettingCommentsProps {
+  id: string
+  setComments: React.Dispatch<React.SetStateAction<IComment[]>>
+}
+export const gettingComments = async ({ id, setComments }: IGettingCommentsProps) => {
+  const response = await api.get(`http://localhost:3000/comments/${id}`)
+  setComments(response.data)
+}
+
 
 export default api
