@@ -5,7 +5,8 @@ import {
   useContext,
   useState
 } from 'react'
-import { ICreateUser } from '../interfaces/IUser/index'
+import { ICreateUser, ICreateUserAddress } from '../interfaces/IUser/index'
+import { ILoginRequest } from '../pages/login'
 import api from '../services/api'
 
 interface AuthContextProps {
@@ -28,14 +29,16 @@ interface IUser {
 type OpenSuccessModal = (value: boolean) => void
 type OpenErrorModal = (value: boolean) => void
 
+
 interface UserContextData {
   user: IUser
   signUp: (
-    data: Omit<ICreateUser, 'passwordConfirm'>,
+    data: Omit<ICreateUser, 'passwordConfirm' | 'cep' | 'state' | 'city' | 'street' | 'number' | 'complement'> & ICreateUserAddress,
     onSuccessModalOpen: OpenSuccessModal,
     onErrorModalOpen: OpenErrorModal
   ) => Promise<void>
   error: string
+  signIn: ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => Promise<void>
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData)
@@ -52,10 +55,11 @@ export const UserProvider = ({ children }: AuthContextProps) => {
 
   const signUp = useCallback(
     async (
-      data: Omit<ICreateUser, 'passwordConfirm'>,
+      data: Omit<ICreateUser, 'passwordConfirm' | 'cep' | 'state' | 'city' | 'street' | 'number' | 'complement'> & ICreateUserAddress,
       onSuccessModalOpen: OpenSuccessModal,
       onErrorModalOpen: OpenErrorModal
     ) => {
+      console.log(data, 'provider')
       await api
         .post('users', data)
         .then(res => {
@@ -70,8 +74,21 @@ export const UserProvider = ({ children }: AuthContextProps) => {
     []
   )
 
+  const signIn = useCallback(async ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => {
+    await api.post('/login', { email, password }).then(res => {
+      const { token } = res.data
+
+      localStorage.setItem('tokenUser', token);
+    }).catch(err => {
+
+      onModalErrorOpen(true)
+      setError(err.response.data.message)
+    })
+
+  }, [])
+
   return (
-    <UserContext.Provider value={{ user, signUp, error }}>
+    <UserContext.Provider value={{ user, signUp, error, signIn }}>
       {children}
     </UserContext.Provider>
   )
