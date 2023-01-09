@@ -24,7 +24,7 @@ const Home = () => {
   }
   const propsCarro = {
     isOwnerSellerPerfil: false,
-    vehicles: vehicles.carros ? vehicles.carros : noVehicleMocked,
+    vehicles: vehicles.carros,
     title: 'Carros'
   }
   const propsLeilao = {
