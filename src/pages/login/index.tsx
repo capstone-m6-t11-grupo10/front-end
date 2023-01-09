@@ -19,6 +19,8 @@ export default function Login() {
     handleSubmit,
     formState: { errors }
   } = useForm({ resolver: yupResolver(validacoesYup) })
+
+
   function onSubmit() {
     console.log('foi')
   }
@@ -165,7 +167,7 @@ export default function Login() {
           fontWeight={600}
           fontSize={'16px'}
           marginLeft={'10px'}
-          type="submit"
+        // type="submit"
         >
           Cadastrar
         </Button>
