@@ -30,7 +30,7 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<ILoginRequest>({ resolver: zodResolver(LoginSchema) })
+} = useForm<ILoginRequest>({ resolver: zodResolver(LoginSchema) })
 
   const { isOpen: isModalErrorOpen, onClose: onModalErrorClose, onOpen: onModalErrorOpen } = useDisclosure()
 
@@ -41,7 +41,9 @@ export default function Login() {
   const handleLogin = (data: ILoginRequest) => {
 
     signIn(data, onModalErrorOpen).then(() => setLoading(false)).catch(() => setLoading(false))
-  }
+  } = useForm({ resolver: yupResolver(validacoesYup) })
+
+
 
   return (
     <>
@@ -66,6 +68,10 @@ export default function Login() {
           backgroundColor={'var(--grey10)'}
           as="form"
           onSubmit={handleSubmit(handleLogin)}
+          color={'var(--grey0)'}
+          fontWeight={600}
+          fontSize={'16px'}
+          marginLeft={'10px'}
         >
           <h2
             style={{

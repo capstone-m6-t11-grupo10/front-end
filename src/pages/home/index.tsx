@@ -6,6 +6,7 @@ import { VehiclesCarousel } from '../profileViewAdmin/VehiclesCarousel'
 import MockLeilao, { vehiclesList } from '../../components/mockLeilao'
 import { Footer } from '../../components/Footer'
 import { BannerHome } from '../../components/BannerHome'
+import { noVehicleMocked } from '../../mocks/mocksVehicles'
 
 const Home = () => {
   const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
