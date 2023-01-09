@@ -16,7 +16,7 @@ import { useNavigate, useNavigation } from 'react-router-dom'
 import { useUser } from '../../providers/UserProvider'
 import { useState } from 'react'
 import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
-import { useDisclosure } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react'
 
 export interface ILoginRequest {
   email: string
@@ -30,20 +30,22 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors }
-} = useForm<ILoginRequest>({ resolver: zodResolver(LoginSchema) })
+  } = useForm<ILoginRequest>({ resolver: zodResolver(LoginSchema) })
 
-  const { isOpen: isModalErrorOpen, onClose: onModalErrorClose, onOpen: onModalErrorOpen } = useDisclosure()
+  const {
+    isOpen: isModalErrorOpen,
+    onClose: onModalErrorClose,
+    onOpen: onModalErrorOpen
+  } = useDisclosure()
 
   const navigate = useNavigate()
   const { signIn } = useUser()
 
-
   const handleLogin = (data: ILoginRequest) => {
-
-    signIn(data, onModalErrorOpen).then(() => setLoading(false)).catch(() => setLoading(false))
-  } = useForm({ resolver: yupResolver(validacoesYup) })
-
-
+    signIn(data, onModalErrorOpen)
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false))
+  }
 
   return (
     <>
@@ -200,6 +202,5 @@ export default function Login() {
         <Footer />
       </Flex>
     </>
-
   )
 }
