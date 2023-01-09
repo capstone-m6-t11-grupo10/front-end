@@ -8,169 +8,192 @@ import {
   Input
 } from '@chakra-ui/react'
 import { FieldError, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { validacoesYup } from '../../schemas'
+import { LoginSchema } from '../../schemas/login'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate, useNavigation } from 'react-router-dom'
+import { useUser } from '../../providers/UserProvider'
+import { useState } from 'react'
+import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
+import { useDisclosure } from '@chakra-ui/react';
+
+export interface ILoginRequest {
+  email: string
+  password: string
+}
 
 export default function Login() {
+  const [loading, setLoading] = useState(false)
+
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(validacoesYup) })
-  function onSubmit() {
-    console.log('foi')
+  } = useForm<ILoginRequest>({ resolver: zodResolver(LoginSchema) })
+
+  const { isOpen: isModalErrorOpen, onClose: onModalErrorClose, onOpen: onModalErrorOpen } = useDisclosure()
+
+  const navigate = useNavigate()
+  const { signIn } = useUser()
+
+
+  const handleLogin = (data: ILoginRequest) => {
+
+    signIn(data, onModalErrorOpen).then(() => setLoading(false)).catch(() => setLoading(false))
   }
 
   return (
-    <Flex
-      w="100%"
-      flexDirection="column"
-      alignItems="center"
-      gap="5rem"
-      overflowY="hidden"
-    >
-      <Header />
-      <FormControl
-        w={['90%', '70%', '411px', '411px']}
-        display={'flex'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-        alignItems={'flex-start'}
-        padding={'44px 48px '}
-        gap={'32px'}
-        borderRadius={'4px'}
-        backgroundColor={'var(--grey10)'}
-        as="form"
-        onSubmit={handleSubmit(onSubmit)}
+    <>
+      <ModalErrorLogin isOpen={isModalErrorOpen} onClose={onModalErrorClose} />
+      <Flex
+        w="100%"
+        flexDirection="column"
+        alignItems="center"
+        gap="5rem"
+        overflowY="hidden"
       >
-        <h2
-          style={{
-            color: '#000000',
-            fontWeight: '500',
-            fontSize: '24px',
-            lineHeight: '30px',
-            fontStyle: 'normal'
-          }}
-        >
-          Login
-        </h2>
-        <FormLabel
-          style={{
-            color: 'var(--grey1)',
-            fontWeight: '500',
-            fontSize: '14px',
-            lineHeight: '17px',
-            fontStyle: 'normal'
-          }}
-        >
-          Usuário
-        </FormLabel>
-
-        <Input
-          w={'100%'}
-          h={'48px'}
+        <Header />
+        <FormControl
+          w={['90%', '70%', '411px', '411px']}
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          alignItems={'flex-start'}
+          padding={'44px 48px '}
+          gap={'15px'}
           borderRadius={'4px'}
-          padding={'0px 16px 0px 16px'}
-          gap={'10px'}
-          isInvalid={errors.name ? true : false}
-          type="name"
-          {...register('name')}
-          placeholder={'Digitar Usúario'}
-        />
-        {!errors.name ? (
-          <FormHelperText>Entre com seu Usuário</FormHelperText>
-        ) : (
-          <FormHelperText color="red">
-            {(errors.name as FieldError).message}
-          </FormHelperText>
-        )}
-        <FormLabel
-          style={{
-            color: 'var(--grey1)',
-            fontWeight: '500',
-            fontSize: '14px',
-            lineHeight: '17px',
-            fontStyle: 'normal'
-          }}
-        >
-          Senha
-        </FormLabel>
-        <Input
-          w={'100%'}
-          h={'48px'}
-          borderRadius={'4px'}
-          padding={'0px 16px 0px 16px'}
-          gap={'10px'}
-          isInvalid={errors.password ? true : false}
-          type="password"
-          {...register('password')}
-          placeholder={'Digitar Senha'}
-        />
-        {!errors.password ? (
-          <FormHelperText>Digite sua senha</FormHelperText>
-        ) : (
-          <FormHelperText color="red">
-            {(errors.password as FieldError).message}
-          </FormHelperText>
-        )}
-        <p
-          style={{
-            color: 'var(--grey2)',
-            fontWeight: '500',
-            fontSize: '14px',
-            lineHeight: '24px',
-            fontStyle: 'normal'
-          }}
-        >
-          Esqueci minha senha
-        </p>
-        <Button
-          w={'100%'}
-          h={'48px'}
-          padding={'12px 28px'}
-          gap={'10px'}
-          borderRadius={'4px'}
-          borderStyle={'1px solid var(--grey4)'}
-          backgroundColor={'var(--brand1)'}
-          color={'var(--whiteFixed)'}
-          fontWeight={600}
-          fontSize={'16px'}
-          marginLeft={'10px'}
-          type="submit"
-        >
-          Entrar
-        </Button>
-        <p
-          style={{
-            color: 'var(--grey2)',
-            fontWeight: '500',
-            fontSize: '14px',
-            lineHeight: '24px',
-            fontStyle: 'normal'
-          }}
-        >
-          Ainda não possui uma conta?
-        </p>
-        <Button
-          w={'100%'}
-          h={'48px'}
-          padding={'12px 28px'}
-          gap={'10px'}
-          borderRadius={'4px'}
-          borderStyle={'1px solid var(--grey4)'}
           backgroundColor={'var(--grey10)'}
-          color={'var(--grey0)'}
-          fontWeight={600}
-          fontSize={'16px'}
-          marginLeft={'10px'}
-          type="submit"
+          as="form"
+          onSubmit={handleSubmit(handleLogin)}
         >
-          Cadastrar
-        </Button>
-      </FormControl>
-      <Footer />
-    </Flex>
+          <h2
+            style={{
+              color: '#000000',
+              fontWeight: '500',
+              fontSize: '24px',
+              lineHeight: '30px',
+              fontStyle: 'normal'
+            }}
+          >
+            Login
+          </h2>
+          <FormLabel
+            style={{
+              color: 'var(--grey1)',
+              fontWeight: '500',
+              fontSize: '14px',
+              lineHeight: '17px',
+              fontStyle: 'normal'
+            }}
+          >
+            Usuário
+          </FormLabel>
+
+          <Input
+            w={'100%'}
+            h={'48px'}
+            borderRadius={'4px'}
+            padding={'0px 16px 0px 16px'}
+            gap={'10px'}
+            isInvalid={!!errors.email}
+            {...register('email')}
+            placeholder={'Digitar Usúario'}
+          />
+          {!errors.email ? (
+            <FormHelperText>Entre com seu Usuário</FormHelperText>
+          ) : (
+            <FormHelperText color="red">
+              {(errors.email as FieldError).message}
+            </FormHelperText>
+          )}
+          <FormLabel
+            style={{
+              color: 'var(--grey1)',
+              fontWeight: '500',
+              fontSize: '14px',
+              lineHeight: '17px',
+              fontStyle: 'normal'
+            }}
+          >
+            Senha
+          </FormLabel>
+          <Input
+            w={'100%'}
+            h={'48px'}
+            borderRadius={'4px'}
+            padding={'0px 16px 0px 16px'}
+            gap={'10px'}
+            isInvalid={!!errors.password}
+            type="password"
+            {...register('password')}
+            placeholder={'Digitar Senha'}
+          />
+          {!errors.password ? (
+            <FormHelperText>Digite sua senha</FormHelperText>
+          ) : (
+            <FormHelperText color="red">
+              {(errors.password as FieldError).message}
+            </FormHelperText>
+          )}
+          <p
+            style={{
+              color: 'var(--grey2)',
+              fontWeight: '500',
+              fontSize: '14px',
+              lineHeight: '24px',
+              fontStyle: 'normal'
+            }}
+          >
+            Esqueci minha senha
+          </p>
+          <Button
+            w={'100%'}
+            h={'48px'}
+            padding={'12px 28px'}
+            gap={'10px'}
+            borderRadius={'4px'}
+            borderStyle={'1px solid var(--grey4)'}
+            backgroundColor={'var(--brand1)'}
+            color={'var(--whiteFixed)'}
+            fontWeight={600}
+            fontSize={'16px'}
+            marginLeft={'10px'}
+            type="submit"
+          >
+            Entrar
+          </Button>
+          <p
+            style={{
+              color: 'var(--grey2)',
+              fontWeight: '500',
+              fontSize: '14px',
+              lineHeight: '24px',
+              fontStyle: 'normal'
+            }}
+          >
+            Ainda não possui uma conta?
+          </p>
+          <Button
+            w={'100%'}
+            h={'48px'}
+            padding={'12px 28px'}
+            gap={'10px'}
+            borderRadius={'4px'}
+            border={'1px solid var(--grey4)'}
+            backgroundColor={'var(--grey10)'}
+            color={'var(--grey0)'}
+            fontWeight={600}
+            fontSize={'16px'}
+            marginLeft={'10px'}
+            onClick={() => navigate('/registration')}
+          >
+            Cadastrar
+          </Button>
+        </FormControl>
+        <Footer />
+      </Flex>
+    </>
+
   )
 }

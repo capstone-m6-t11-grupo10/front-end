@@ -22,8 +22,9 @@ import { ICreateUser } from '../../interfaces/IUser'
 import { useUser } from '../../providers/UserProvider'
 import { createUserSchema } from '../../schemas/index'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ModalSuccessRegister } from '../../components/Modals/ModalSuccessRegister/index'
+
 import { ModalErrorRegister } from '../../components/Modals/ModalErrorRegister'
+import { ModalSuccessRegister } from '../../components/Modals/ModalSuccessRegister'
 
 export default function Registration() {
   const [accountType, setAccountType] = useState('Comprador')
@@ -122,9 +123,18 @@ export default function Registration() {
   const handleForm = (data: ICreateUser) => {
     setLoading(true)
 
-    const { passwordConfirm, ...cleanData } = data
+    const { passwordConfirm, cep, city, complement, number, state, street, ...cleanData } = data
 
-    const formateData = { ...cleanData, isSeller: accountType === 'Anunciante' }
+    const address = {
+      cep,
+      city,
+      complement,
+      number,
+      state,
+      street
+    }
+
+    const formateData = { ...cleanData, isSeller: accountType === 'Anunciante', address }
 
     signUp(formateData, onSuccessModalOpen, onErrorModalOpen)
       .then(() => setLoading(false))

@@ -50,6 +50,7 @@ export interface IPropsUserVehicles {
     }
 }
 
+
 export interface ICreateUser {
     name: string
     email: string
@@ -67,6 +68,19 @@ export interface ICreateUser {
     passwordConfirm: string
     isSeller: boolean
 }
+
+
+export interface ICreateUserAddress {
+    address :{ 
+        cep: string
+        state: string
+        city: string
+        street: string
+        number: string
+        complement: string
+    }
+}
+
 
 export interface IBodyEdit {
     [key: string]: any;

@@ -11,18 +11,15 @@ import {
 } from '@chakra-ui/react'
 import { AiOutlineClose } from 'react-icons/ai'
 import { Flex } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useUser } from '../../../providers/UserProvider'
 
-interface ModalSuccessRegister {
+interface ModalErrorLoginProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export const ModalSuccessRegister = ({
-  isOpen,
-  onClose
-}: ModalSuccessRegister) => {
-  const navigate = useNavigate()
+export const ModalErrorLogin = ({ isOpen, onClose }: ModalErrorLoginProps) => {
+  const { error } = useUser()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={['md', 'lg', '2xl', '3xl']}>
@@ -40,7 +37,7 @@ export const ModalSuccessRegister = ({
             fontSize="1.6rem"
             color="var(--grey1)"
           >
-            Sucesso!
+            Erro!
           </Heading>
           <IconButton
             aria-label="Close Modal"
@@ -61,7 +58,7 @@ export const ModalSuccessRegister = ({
               fontSize="1.6rem"
               color="var(--grey1)"
             >
-              Sua conta foi criada com sucesso
+              Não foi possível fazer login
             </Heading>
 
             <Text
@@ -70,15 +67,15 @@ export const ModalSuccessRegister = ({
               fontSize="1.6rem"
               color="var(--grey2)"
             >
-              Agora você poderá ver seus negócios crescendo em grande escala
+              Houve um erro, {error.toLowerCase()}
             </Text>
 
             <Button
-              onClick={() => navigate('/login')}
+              onClick={onClose}
               _hover={{ bg: 'var(--brand2)' }}
               w="30%"
               h="40px"
-              p="12px 20px"
+              p="14px 20px"
               bg="var(--brand1)"
               border="1px solid var(--brand1)"
               borderRadius="4px"
@@ -88,7 +85,7 @@ export const ModalSuccessRegister = ({
               minW="132px"
               fontSize="1.4rem"
             >
-              Ir para login
+              Tentar novamente
             </Button>
           </Flex>
         </ModalBody>
