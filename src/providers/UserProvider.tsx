@@ -3,6 +3,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useMemo,
   useState
 } from 'react'
 import { ICreateUser, ICreateUserAddress } from '../interfaces/IUser/index'
@@ -87,8 +88,10 @@ export const UserProvider = ({ children }: AuthContextProps) => {
 
   }, [])
 
+  const userContextValues = useMemo(() => ({ user, signUp, error, signIn }), [])
+
   return (
-    <UserContext.Provider value={{ user, signUp, error, signIn }}>
+    <UserContext.Provider value={userContextValues}>
       {children}
     </UserContext.Provider>
   )

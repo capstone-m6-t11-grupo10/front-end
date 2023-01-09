@@ -4,7 +4,8 @@ import {
   useContext,
   useEffect,
   useState,
-  Dispatch
+  Dispatch,
+  useMemo
 } from 'react'
 
 interface AuthContextProps {
@@ -28,20 +29,22 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: AuthContextProps) => {
   const [authenticated, setAuthenticated] = useState(false)
 
-  const [token, setToken] = useState(
-    () => (localStorage.getItem('token') as string) || ''
+  const [token] = useState(
+    () => (localStorage.getItem('tokenUser') as string) || ''
   )
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('tokenUser')
 
     if (token) {
       return setAuthenticated(true)
     }
-  }, [authenticated])
+  }, [])
+
+  const authContextValues = useMemo(() => ({ authenticated, token, setAuthenticated }), [])
 
   return (
-    <AuthContext.Provider value={{ authenticated, token, setAuthenticated }}>
+    <AuthContext.Provider value={authContextValues}>
       {children}
     </AuthContext.Provider>
   )
