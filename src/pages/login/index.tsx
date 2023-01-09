@@ -1,22 +1,21 @@
 import {
-  Box,
   Button,
   Flex,
   FormControl,
   FormHelperText,
   FormLabel,
-  Input
+  Input,
+  useDisclosure
 } from '@chakra-ui/react'
-import { FieldError, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { LoginSchema } from '../../schemas/login'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate, useNavigation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../providers/UserProvider'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
-import { useDisclosure } from '@chakra-ui/react'
 
 export interface ILoginRequest {
   email: string
@@ -25,6 +24,7 @@ export interface ILoginRequest {
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
+
 
   const {
     register,
@@ -40,6 +40,10 @@ export default function Login() {
 
   const navigate = useNavigate()
   const { signIn } = useUser()
+
+  const navigateToRegister = useCallback(() => {
+    navigate('/registration')
+  }, [])
 
   const handleLogin = (data: ILoginRequest) => {
     signIn(data, onModalErrorOpen)
@@ -106,13 +110,13 @@ export default function Login() {
             gap={'10px'}
             isInvalid={!!errors.email}
             {...register('email')}
-            placeholder={'Digitar Usúario'}
+            placeholder={'Digitar Usuário'}
           />
           {!errors.email ? (
             <FormHelperText>Entre com seu Usuário</FormHelperText>
           ) : (
             <FormHelperText color="red">
-              {(errors.email as FieldError).message}
+              {errors.email.message}
             </FormHelperText>
           )}
           <FormLabel
@@ -141,7 +145,7 @@ export default function Login() {
             <FormHelperText>Digite sua senha</FormHelperText>
           ) : (
             <FormHelperText color="red">
-              {(errors.password as FieldError).message}
+              {errors.password.message}
             </FormHelperText>
           )}
           <p
@@ -183,6 +187,7 @@ export default function Login() {
             Ainda não possui uma conta?
           </p>
           <Button
+            isLoading={loading}
             w={'100%'}
             h={'48px'}
             padding={'12px 28px'}
@@ -194,7 +199,7 @@ export default function Login() {
             fontWeight={600}
             fontSize={'16px'}
             marginLeft={'10px'}
-            onClick={() => navigate('/registration')}
+            onClick={navigateToRegister}
           >
             Cadastrar
           </Button>
