@@ -10,7 +10,7 @@ import { noVehicleMocked } from '../../mocks/mocksVehicles'
 
 const Home = () => {
   const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
-
+  const [currentId, setCurrentId] = useState('')
   useEffect(() => {
     settingVehicles(setVehicles)
   }, [])
@@ -20,23 +20,26 @@ const Home = () => {
   const propsMoto = {
     isOwnerSellerPerfil: false,
     vehicles: vehicles.motos,
-    title: 'Motos'
+    title: 'Motos',
+    id: 'motos'
   }
   const propsCarro = {
     isOwnerSellerPerfil: false,
     vehicles: vehicles.carros,
-    title: 'Carros'
+    title: 'Carros',
+    id: 'carros'
   }
   const propsLeilao = {
     title: 'Leilao',
     isOwnerSellerPerfil: false,
-    leilao: vehiclesList
+    leilao: vehiclesList,
+    id: 'leilao'
   }
 
   return (
     <Flex w="100%" flexDir="column" justifyItems="center">
-      <Header />
-      <BannerHome />
+      <Header setCurrentId={setCurrentId} />
+      <BannerHome to={'motos'} />
       <VehiclesCarousel props={propsLeilao} />
       <VehiclesCarousel props={propsCarro} />
       <VehiclesCarousel props={propsMoto} />

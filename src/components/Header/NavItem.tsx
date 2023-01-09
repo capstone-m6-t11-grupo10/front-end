@@ -1,17 +1,18 @@
 import { Button, ButtonProps } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-scroll'
 
 interface NavItemProps extends ButtonProps {
   content: string
   redirectTo: string
+  to?: any
 }
 
-export const NavItem = ({ content, redirectTo, ...rest }: NavItemProps) => {
+export const NavItem = ({ content, redirectTo, to, ...rest }: NavItemProps) => {
   const navigate = useNavigate()
 
   return (
     <Button
-      onClick={() => navigate(redirectTo)}
       color="var(--grey2)"
       fontSize="2xl"
       fontWeight="400"
@@ -20,7 +21,12 @@ export const NavItem = ({ content, redirectTo, ...rest }: NavItemProps) => {
       transition="ease 0s, transform 0.2s"
       {...rest}
     >
-      {content}
+      {!to && content}
+      {to && (
+        <Link to={to} spy={true} smooth={true} offset={-100} duration={500}>
+          {content}
+        </Link>
+      )}
     </Button>
   )
 }

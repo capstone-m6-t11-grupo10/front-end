@@ -1,6 +1,15 @@
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 
-export const BannerHome = () => {
+import { NavItem } from '../Header/NavItem'
+export interface Nav {
+  to?: any
+}
+export const BannerHome = ({ to }: Nav) => {
+  const [scroll, setScroll] = useState('')
+  useEffect(() => {
+    console.log(scroll)
+  }, [scroll])
   return (
     <Flex
       alignItems="center"
@@ -37,7 +46,7 @@ export const BannerHome = () => {
           Um ambiente feito para você explorar o seu melhor
         </Text>
         <Flex flexDirection="row" justifyContent="center" gap={10}>
-          <Button
+          <NavItem
             fontFamily="Inter"
             fontSize="1em"
             fontWeight="600"
@@ -49,10 +58,11 @@ export const BannerHome = () => {
             width="8em"
             _hover={{ bg: 'var(--brand4)', color: 'var(--brand1)' }}
             transition="all .5s cubic-bezier(.08,.52,.52,1)"
-          >
-            Carros
-          </Button>
-          <Button
+            content="Carros"
+            to="carros"
+            redirectTo={''}
+          />
+          <NavItem
             fontFamily="Inter"
             fontSize="1em"
             fontWeight="600"
@@ -64,9 +74,10 @@ export const BannerHome = () => {
             width="8em"
             _hover={{ bg: 'var(--brand4)', color: 'var(--brand1)' }}
             transition="all .5s cubic-bezier(.08,.52,.52,1)"
-          >
-            Motos
-          </Button>
+            content="Motos"
+            to="motos"
+            redirectTo={''}
+          />
         </Flex>
       </Flex>
     </Flex>

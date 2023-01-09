@@ -11,8 +11,10 @@ import { AiOutlineClose } from 'react-icons/ai'
 
 import { useDisclosure } from '@chakra-ui/react'
 import { useAuth } from '../../providers/AuthProvider'
-
-export const Header = () => {
+export interface HeaderProps {
+  setCurrentId?: React.Dispatch<React.SetStateAction<string>>
+}
+export const Header = ({ setCurrentId }: HeaderProps) => {
   const { authenticated } = useAuth()
 
   const {
@@ -52,9 +54,9 @@ export const Header = () => {
             borderRight="2px solid var(--grey6)"
             paddingRight="5"
           >
-            <NavItem content="Carros" redirectTo="/" />
-            <NavItem content="Motos" redirectTo="/" />
-            <NavItem content="Leilão" redirectTo="/" />
+            <NavItem content="Carros" to="carros" redirectTo={'/'} />
+            <NavItem content="Motos" to="motos" redirectTo={'/'} />
+            <NavItem content="Leilão" to="leilao" redirectTo={'/'} />
           </HStack>
 
           <HStack paddingLeft="5" spacing="5">

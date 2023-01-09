@@ -15,11 +15,12 @@ interface VehiclesCarousel {
     isOwnerSellerPerfil: boolean
 
     leilao?: IVehicleLeilao[]
+    id?: string
   }
 }
 
 export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
-  const { title, vehicles, isOwnerSellerPerfil, leilao } = props
+  const { title, vehicles, isOwnerSellerPerfil, leilao, id } = props
 
   let noVechiles = false
 
@@ -29,7 +30,13 @@ export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
 
   return (
     <Box paddingX={['25px', '45px']} mt="100px">
-      <Heading as="h2" fontFamily="Lexend" fontSize="2.4rem" color="black">
+      <Heading
+        id={id}
+        as="h2"
+        fontFamily="Lexend"
+        fontSize="2.4rem"
+        color="black"
+      >
         {title}
       </Heading>
 
@@ -58,14 +65,13 @@ export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
           <CardVehicle
             key={vehicle.uuid}
             props={{ vehicle, isOwnerSellerPerfil }}
-          />))}
+          />
+        ))}
 
-
-        {noVechiles &&
+        {noVechiles && (
           // <CardVehicle key='01234' props={{ vehicle: noVehicleMocked, isOwnerSellerPerfil: false }} />
           <NoVehiclesCard />
-        }
-
+        )}
       </Flex>
     </Box>
   )
