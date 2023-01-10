@@ -11,7 +11,6 @@ import {
   Box
 } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-
 import { Footer } from '../../components/Footer'
 //essa funcao vai retornar os valores para meu front
 import { UseVehicle } from '../../providers/vehicleProvider'
@@ -20,14 +19,23 @@ import { useAuth } from '../../providers/AuthProvider'
 import { gettingComments, postingComment } from '../../services/api'
 import { Comments } from './comments'
 import { commentsMocked } from '../../mocks/mocksComments'
+import { useUser } from '../../providers/UserProvider'
 export default function DetailedVehicle() {
   const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
 
   const params = useParams()
   const { listVehicle, vehicle } = UseVehicle()
+  const { getUser, user } = useUser()
+
+  useEffect(() => {
+    getUser()
+  }, [user])
 
   const [text, setText] = useState("");
   const [comments, setComments] = useState(commentsMocked)
+
+  const { image, name } = user
+  console.log(user && user)
 
 
   const { setAuthenticated } = useAuth()
@@ -167,7 +175,8 @@ export default function DetailedVehicle() {
             <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <img
-                  src="https://s3.static.brasilescola.uol.com.br/be/2020/08/lobo-guara.jpg"
+                  src={image!}
+                  // src="https://s3.static.brasilescola.uol.com.br/be/2020/08/lobo-guara.jpg"
                   alt="Green double couch with wooden legs"
                   style={{
                     borderRadius: '100%',
@@ -175,7 +184,7 @@ export default function DetailedVehicle() {
                     height: '60px'
                   }}
                 />
-                <Text marginLeft="2rem">Samuel Tigre</Text>
+                <Text marginLeft="2rem">{name}</Text>
               </div>
               <textarea value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -232,10 +241,10 @@ export default function DetailedVehicle() {
                     width: '100px',
                     height: '100px'
                   }}
-                  src="https://s3.static.brasilescola.uol.com.br/be/2020/08/lobo-guara.jpg"
+                  src={image!}
                 />
                 <Text color="var(--grey1)" fontWeight="600">
-                  Samuel tigre
+                  {name}
                 </Text>
                 <Text>
                   Various versions have evolved over the years, sometimes by

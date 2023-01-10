@@ -9,7 +9,7 @@ import { userMocked } from '../../mocks/mocksUser'
 
 export const vehiclesList: IVehicleLeilao[] = [
   {
-    uuid: '1',
+    id: '1',
     time: '01:58:00',
     title: ' Renault Kwid',
     image: carro1,
@@ -21,7 +21,7 @@ export const vehiclesList: IVehicleLeilao[] = [
     price: 'R$ 00.000,00'
   },
   {
-    uuid: '2',
+    id: '2',
     time: '01:58:00',
     title: 'Camaro',
     image: carro2,
@@ -33,7 +33,7 @@ export const vehiclesList: IVehicleLeilao[] = [
     price: 'R$ 00.000,00'
   },
   {
-    uuid: '3',
+    id: '3',
     time: '01:58:00',
     title: 'Mercedes Benz A 200 CGI ADVANCE SEDAN Mercedes',
     image:
@@ -46,7 +46,7 @@ export const vehiclesList: IVehicleLeilao[] = [
     price: 'R$ 00.000,00'
   },
   {
-    uuid: '7',
+    id: '7',
     time: '01:58:00',
     title: 'Mercedes Benz A 200 CGI ADVANCE SEDAN Mercedes',
     image:

@@ -59,11 +59,11 @@ export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
         }}
       >
         {leilao?.map(vehicle => (
-          <CardVehicleLeilao key={vehicle.uuid} props={vehicle} />
+          <CardVehicleLeilao key={vehicle.id} props={vehicle} />
         ))}
         {vehicles?.map(vehicle => (
           <CardVehicle
-            key={vehicle.uuid}
+            key={vehicle.id}
             props={{ vehicle, isOwnerSellerPerfil }}
           />
         ))}

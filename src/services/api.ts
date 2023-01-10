@@ -58,6 +58,7 @@ export const postingComment = async (text: string, idVehicle: string, tokenUser:
   return response
 }
 
+
 export interface IGettingCommentsProps {
   id: string
   setComments: React.Dispatch<React.SetStateAction<IComment[]>>
@@ -66,6 +67,7 @@ export const gettingComments = async ({ id, setComments }: IGettingCommentsProps
   const response = await api.get(`http://localhost:3000/comments/${id}`)
   setComments(response.data)
 }
+
 
 
 export default api

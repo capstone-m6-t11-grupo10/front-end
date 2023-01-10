@@ -3,6 +3,7 @@ import { IPropsVehicle } from '../../interfaces/IVehicle'
 import { IsActiveVehicle } from './isActive/isActive'
 import { SellerData } from './SellerData'
 import { AdvertiserOptions } from './AdvertiserOptions'
+import { useNavigate } from 'react-router-dom'
 
 export const CardVehicle = ({ props }: IPropsVehicle) => {
   const {
@@ -21,6 +22,13 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
 
   const { isOwnerSellerPerfil } = props
 
+  const navigation = useNavigate();
+  const id = props.vehicle.id;
+
+  function handleClick() {
+    navigation(`/detailedVehicle/${id}`);
+  }
+
   return (
     <Card
       w={['230px', '270px', '312px']}
@@ -28,6 +36,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
       shadow="none"
       outline="none"
       position="relative"
+      onClick={handleClick}
     >
       <IsActiveVehicle props={{ isActive }} />
       <Image src={images[0].image} w='100%' objectFit='cover' h='215px' />

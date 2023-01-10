@@ -1,16 +1,17 @@
-import { Flex, IconButton, HStack, Image } from '@chakra-ui/react'
-import { User } from './User'
-import { Menu } from './Menu'
-import { NavItem } from './NavItem'
-import { MenuMobile } from './MenuMobile'
+import { Flex, IconButton, HStack, Image } from "@chakra-ui/react"
+import { User } from "./User"
+import { Menu } from "./Menu"
+import { NavItem } from "./NavItem"
+import { MenuMobile } from "./MenuMobile"
 
-import Logo from '../../assets/colorfulLogo.svg'
+import Logo from "../../assets/colorfulLogo.svg"
 
-import { GiHamburgerMenu } from 'react-icons/gi'
-import { AiOutlineClose } from 'react-icons/ai'
+import { GiHamburgerMenu } from "react-icons/gi"
+import { AiOutlineClose } from "react-icons/ai"
 
-import { useDisclosure } from '@chakra-ui/react'
-import { useAuth } from '../../providers/AuthProvider'
+import { useDisclosure } from "@chakra-ui/react"
+import { useAuth } from "../../providers/AuthProvider"
+import { useNavigate } from "react-router"
 export interface HeaderProps {
   setCurrentId?: React.Dispatch<React.SetStateAction<string>>
 }
@@ -29,11 +30,19 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
     onToggle: onMenuToggle
   } = useDisclosure()
 
+
+  const navigation = useNavigate();
+
+  function handleSubmit() {
+    navigation(`/`);
+  }
+
+
   return (
     <Flex as="nav" width="100%">
       <Flex
         h="100px"
-        paddingX={['25px', '45px']}
+        paddingX={["25px", "45px"]}
         w="100%"
         maxW="1600px"
         bg="var(--grey10)"
@@ -46,17 +55,19 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
           h="30px"
           src={Logo}
           alt="Motors Shop"
+          onClick={handleSubmit}
+          cursor="pointer"
         />
-        <Flex display={['none', 'none', 'flex', 'flex']}>
+        <Flex display={["none", "none", "flex", "flex"]}>
           <HStack
             spacing="5"
             w="auto"
             borderRight="2px solid var(--grey6)"
             paddingRight="5"
           >
-            <NavItem content="Carros" to="carros" redirectTo={'/'} />
-            <NavItem content="Motos" to="motos" redirectTo={'/'} />
-            <NavItem content="Leilão" to="leilao" redirectTo={'/'} />
+            <NavItem content="Carros" to="carros" redirectTo={"/"} />
+            <NavItem content="Motos" to="motos" redirectTo={"/"} />
+            <NavItem content="Leilão" to="leilao" redirectTo={"/"} />
           </HStack>
 
           <HStack paddingLeft="5" spacing="5">
@@ -83,9 +94,9 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
           bg="transparent"
           mr="2"
           icon={isMenuMobileOpen ? <AiOutlineClose /> : <GiHamburgerMenu />}
-          display={['flex', 'flex', 'none', 'none']}
+          display={["flex", "flex", "none", "none"]}
           onClick={onMenuMobileToggle}
-          _hover={{ bg: 'transparent' }}
+          _hover={{ bg: "transparent" }}
         />
         <MenuMobile
           isOpen={isMenuMobileOpen}
@@ -94,7 +105,7 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
           mt="80px"
         />
         <Menu
-          display={['none', 'none', 'flex', 'flex']}
+          display={["none", "none", "flex", "flex"]}
           isOpen={isMenuOpen}
           onClose={onMenuClose}
           ml="auto"

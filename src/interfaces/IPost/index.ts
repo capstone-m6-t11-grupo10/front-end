@@ -3,7 +3,7 @@ import { IUser } from "../IUser"
 import { IVehicle } from "../IVehicle"
 
 export interface IPost {
-    uuid: string
+    id: string
     tittle: string
     description: string
     isActive: boolean
@@ -12,7 +12,7 @@ export interface IPost {
     userId: string
 }
 export interface IPostVehicled {
-    uuid: string
+    id: string
     tittle: string
     description: string
     image: string
@@ -21,7 +21,7 @@ export interface IPostVehicled {
     userId: string
 }
 export interface IPostFull {
-    uuid: string
+    id: string
     tittle: string
     description: string
     image: string
