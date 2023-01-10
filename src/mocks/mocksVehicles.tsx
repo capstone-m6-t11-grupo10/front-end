@@ -2,7 +2,7 @@ import { IVehicle } from '../interfaces/IVehicle'
 import { userMocked } from './mocksUser'
 
 export const noVehicleMocked: IVehicle = {
-  uuid: '123',
+  id: '123',
   title: 'Ainda estamos sem veiculo',
   description:
     'Mussum Ipsum, cacilds vidis litro abertis. Mauris nec dolor in eros commodo tempor. Aenean aliquam molestie leo, vitae iaculis nisl.Leite de capivaris, leite de mula manquis sem cabeça.Delegadis gente finis, bibendum egestas augue arcu ut est.Per aumento de cachacis, eu reclamis.',
@@ -19,7 +19,7 @@ export const noVehicleMocked: IVehicle = {
 }
 
 export const vehicleMocked: IVehicle = {
-  uuid: '123',
+  id: '123',
   title: 'Carrão prata bolado',
   description:
     'Mussum Ipsum, cacilds vidis litro abertis. Mauris nec dolor in eros commodo tempor. Aenean aliquam molestie leo, vitae iaculis nisl.Leite de capivaris, leite de mula manquis sem cabeça.Delegadis gente finis, bibendum egestas augue arcu ut est.Per aumento de cachacis, eu reclamis.',

@@ -8,32 +8,32 @@ export interface IComment {
     user: IUser
 }
 export interface IComent {
-    uuid: string
+    id: string
     content: string
     postId: string
     userId: string
 }
 export interface IComentFull {
-    uuid: string
+    id: string
     content: string
     post: IPost
     user: IUser
 }
 export interface IComentUser {
-    uuid: string
+    id: string
     content: string
     postId: string
     user: IUser
 }
 export interface IComentPost {
-    uuid: string
+    id: string
     content: string
     post: IPost
     userId: string
 }
 
 export interface ICommentsUser {
-    uuid: string
+    id: string
     content: string
     postId: string
     user: IUser

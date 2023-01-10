@@ -1,5 +1,6 @@
 import { Text } from "@chakra-ui/react"
 import { IComment } from "../../interfaces/coments"
+import { useUser } from "../../providers/UserProvider"
 
 interface IOneComment {
     commentary: IComment
@@ -9,6 +10,7 @@ export const OneComment = ({ commentary }: IOneComment) => {
     const { id, comment, user, dateCreated } = commentary
     const { image, name } = user
     const formatDate = dateCreated.slice(0, 10)
+    // const { user } = useUser()
     return (
         <div key={id} style={{ marginTop: '40px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>

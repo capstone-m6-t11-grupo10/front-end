@@ -6,9 +6,13 @@ import {
   useMemo,
   useState
 } from 'react'
+import { useNavigate } from 'react-router'
 import { ICreateUser, ICreateUserAddress } from '../interfaces/IUser/index'
 import { ILoginRequest } from '../pages/login'
 import api from '../services/api'
+import jwt_decode from 'jwt-decode'
+import { IPayload } from '../interfaces/payload'
+import { userMocked } from '../mocks/mocksUser'
 
 interface AuthContextProps {
   children: ReactNode
@@ -40,6 +44,7 @@ interface UserContextData {
   ) => Promise<void>
   error: string
   signIn: ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => Promise<void>
+  getUser: () => Promise<void>
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData)
@@ -52,7 +57,10 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: AuthContextProps) => {
   const [user, setUser] = useState<IUser>({} as IUser)
+  const [payload, setPayload] = useState<IPayload>({} as IPayload)
   const [error, setError] = useState('')
+  const navigation = useNavigate()
+
 
   const signUp = useCallback(
     async (
@@ -75,20 +83,46 @@ export const UserProvider = ({ children }: AuthContextProps) => {
     []
   )
 
+  const getUser = useCallback(async () => {
+    const tokenUser = localStorage.getItem('tokenUser');
+
+    const header = {
+      headers: {
+        Authorization: `Bearer ${tokenUser}`,
+      },
+    }
+
+    const currentPayload: IPayload = jwt_decode(tokenUser!)
+    setPayload(currentPayload)
+
+    console.log(currentPayload)
+
+    const id = currentPayload.id
+
+    await api.get(`http://localhost:3000/users/${id}`, header).then(res => setUser(res.data))
+    // setUser(userMocked)
+    console.log(user)
+  }, [])
+
   const signIn = useCallback(async ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => {
     await api.post('/login', { email, password }).then(res => {
       const { token } = res.data
 
       localStorage.setItem('tokenUser', token);
-    }).catch(err => {
+      navigation(`/`);
 
+      getUser()
+      console.log(payload.id)
+
+    }).catch(err => {
       onModalErrorOpen(true)
       setError(err.response.data.message)
     })
 
   }, [])
 
-  const userContextValues = useMemo(() => ({ user, signUp, error, signIn }), [])
+
+  const userContextValues = useMemo(() => ({ user, signUp, error, signIn, getUser }), [])
 
   return (
     <UserContext.Provider value={userContextValues}>

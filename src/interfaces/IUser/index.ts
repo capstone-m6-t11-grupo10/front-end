@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 
 export interface IUser {
-    uuid: string
+    id: string
     name: string
     birthDate: string
     image: string
@@ -25,7 +25,7 @@ export interface IUserEdit {
     bio: string
 }
 export interface IUserAddressed {
-    uuid: string
+    id: string
     name: string
     birthDate: string
     image: string
@@ -71,7 +71,7 @@ export interface ICreateUser {
 
 
 export interface ICreateUserAddress {
-    address :{ 
+    address: {
         cep: string
         state: string
         city: string

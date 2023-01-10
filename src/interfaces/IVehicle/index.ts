@@ -5,7 +5,7 @@ export interface Image {
   image: string
 }
 export interface IVehicle {
-  uuid: string
+  id: string
   title: string
   description: string
   isActive: boolean
@@ -20,7 +20,7 @@ export interface IVehicle {
 }
 
 export interface IVehicleLeilao {
-  uuid: string
+  id: string
   title: string
   time: string
   description: string
@@ -32,7 +32,7 @@ export interface IVehicleLeilao {
 }
 export interface IVehicleLeilaoProps {
   props: {
-    uuid: string
+    id: string
     title: string
     time: string
     description: string
@@ -53,7 +53,7 @@ export interface IPropsVehicleIsActive {
 }
 
 export interface IVehiclePosted {
-  uuid: string
+  id: string
   color: string
   type: string
   plate: string

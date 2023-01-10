@@ -6,7 +6,7 @@ export const commentsMocked: IComment[] = [
         "comment": "teste",
         "dateCreated": "2023-01-05T14:05:26.323Z",
         "user": {
-            "uuid": "df7b5399-e596-4b98-95eb-9a776017da0d",
+            "id": "df7b5399-e596-4b98-95eb-9a776017da0d",
             "name": "kamila",
             "birthDate": 'null',
             "image": "imageeem",

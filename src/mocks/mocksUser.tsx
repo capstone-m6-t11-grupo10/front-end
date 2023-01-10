@@ -1,5 +1,5 @@
 export const userMocked = {
-  uuid: '1234',
+  id: '1234',
   name: 'vini',
   birthDate: '12-24-2001',
   image: 'string',

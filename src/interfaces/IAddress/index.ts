@@ -6,7 +6,7 @@ export interface IPropChildren {
 }
 
 export interface IAddress {
-  uuid: string
+  id: string
   country: string
   state: string
   city: string
