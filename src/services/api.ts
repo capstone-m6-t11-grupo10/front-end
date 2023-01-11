@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction } from 'react';
 import { map, object, string } from 'zod';
 import { IComment } from '../interfaces/coments';
 import { IBodyEdit, IBodyEditProps, IUser, IUserEdit } from '../interfaces/IUser';
+import { IPayload } from '../interfaces/payload';
+import jwt_decode from 'jwt-decode'
 
 const baseUrl = 'http://localhost:3000/'
 
@@ -27,8 +29,6 @@ export const settingProfileView = async ({ setUserInfo, id }: any) => {
 }
 
 
-
-
 export const edittingProfile = async (props: IBodyEditProps) => {
   const { data, setUserInfo, id } = props
   const values = Object.values(data)
@@ -47,7 +47,9 @@ export const edittingProfile = async (props: IBodyEditProps) => {
   });
 }
 
-export const postingComment = async (text: string, idVehicle: string, tokenUser: string) => {
+export const postingComment = async (text: string, idVehicle: string) => {
+
+  const tokenUser: string = localStorage.getItem('tokenUser') || ''
   const header = {
     headers: {
       Authorization: `Bearer ${tokenUser}`,
@@ -56,6 +58,19 @@ export const postingComment = async (text: string, idVehicle: string, tokenUser:
 
   const response = await api.post(`http://localhost:3000/comments/${idVehicle}`, { comment: text }, header)
   return response
+}
+
+export const settingUser = async (setUser: Dispatch<SetStateAction<IUser>>) => {
+  const tokenUser = localStorage.getItem('tokenUser');
+
+  const header = {
+    headers: {
+      Authorization: `Bearer ${tokenUser}`,
+    },
+  }
+  const currentPayload: IPayload = jwt_decode(tokenUser!)
+  const id = currentPayload.id
+  await api.get(`http://localhost:3000/users/${id}`, header).then(res => setUser(res.data))
 }
 
 
