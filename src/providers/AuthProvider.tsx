@@ -16,7 +16,7 @@ interface AuthContextData {
   token: string
   authenticated: boolean
   setAuthenticated: Dispatch<React.SetStateAction<boolean>>
-  verifyAuthenticated: () => void
+  verifyAuthenticated: () => boolean
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
@@ -46,8 +46,9 @@ export const AuthProvider = ({ children }: AuthContextProps) => {
     const token = localStorage.getItem('tokenUser')
 
     if (token) {
-      return setAuthenticated(true)
-    }
+      setAuthenticated(true)
+      return true
+    } else { return false }
   }
 
   const authContextValues = useMemo(() => ({ authenticated, token, setAuthenticated, verifyAuthenticated }), [])

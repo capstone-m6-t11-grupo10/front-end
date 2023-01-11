@@ -37,8 +37,8 @@ export default function DetailedVehicle() {
   const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
   const idVehicle: string = params.vehicleId || ''
 
-  const { verifyAuthenticated, authenticated } = useAuth()
-  verifyAuthenticated()
+  const { verifyAuthenticated } = useAuth()
+  const isAutheticated = verifyAuthenticated()
 
   useEffect(() => {
     idVehicle ? listVehicle(idVehicle) : listVehicle(idCarNotFound)
@@ -79,7 +79,7 @@ export default function DetailedVehicle() {
             <InfoVehicle vehicle={vehicle} />
 
             <Comments comments={comments} />
-            {authenticated && <CommentMaker props={propsCommentMaker} />}
+            {isAutheticated && <CommentMaker props={propsCommentMaker} />}
 
           </section>
           <section style={{ width: '30%' }}>
