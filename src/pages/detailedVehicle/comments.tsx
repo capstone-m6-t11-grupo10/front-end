@@ -21,7 +21,7 @@ export const Comments = ({ comments }: ICommentsProps) => {
                 Comentários
             </h2>
             {comments.map(comment =>
-                <OneComment commentary={comment} />
+                <OneComment key={comment.id} commentary={comment} />
             )}
         </Card>
     )

@@ -20,49 +20,34 @@ import { gettingComments, postingComment } from '../../services/api'
 import { Comments } from './comments'
 import { commentsMocked } from '../../mocks/mocksComments'
 import { useUser } from '../../providers/UserProvider'
+import { CommentMaker } from './commentMaker'
+import { VehicleOwnerCard } from './vehicleOwnerCard'
+import { InfoVehicle } from './infoVehicle'
+import { VehiclesPics } from './vehiclesPics'
+
+
+
+
 export default function DetailedVehicle() {
-  const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
 
   const params = useParams()
   const { listVehicle, vehicle } = UseVehicle()
-  const { getUser, user } = useUser()
-
-  useEffect(() => {
-    getUser()
-  }, [user])
-
-  const [text, setText] = useState("");
   const [comments, setComments] = useState(commentsMocked)
 
-  const { image, name } = user
-  console.log(user && user)
-
-
-  const { setAuthenticated } = useAuth()
-  setAuthenticated(true)
-
+  const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
   const idVehicle: string = params.vehicleId || ''
-  const tokenUser: string = localStorage.getItem('tokenUser') || ''
+
+  const { verifyAuthenticated, authenticated } = useAuth()
+  verifyAuthenticated()
 
   useEffect(() => {
-    if (idVehicle) {
-      listVehicle(idVehicle)
-    } else {
-      listVehicle(idCarNotFound)
-    }
+    idVehicle ? listVehicle(idVehicle) : listVehicle(idCarNotFound)
     gettingComments({ id: idVehicle, setComments })
 
   }, [])
 
-  const imagemTeste = vehicle.images && vehicle.images[0].image
+  const propsCommentMaker = { idVehicle, setComments }
 
-
-  const handleCommentButton = async () => {
-    await postingComment(text, idVehicle, tokenUser)
-    gettingComments({ id: idVehicle, setComments })
-    setText('')
-
-  }
 
   return (
     <Box w="100%">
@@ -91,175 +76,15 @@ export default function DetailedVehicle() {
               gap: '3rem'
             }}
           >
-            <Card bg={'var(--grey10)'}>
-              <CardBody>
-                <Image
-                  src={imagemTeste || ''}
-                  alt={vehicle?.title}
-                  borderRadius="lg"
-                  width={'400px'}
-                  height={'300px'}
-                  margin={'0 auto'}
-                />
-              </CardBody>
-            </Card>
-            <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
-              <CardBody>
-                <Heading size="md">{vehicle?.title}</Heading>
-              </CardBody>
-
-              <CardFooter display={'flex'} justifyContent={'space-between'}>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                      <Text
-                        padding="0.3rem"
-                        bg="var(--brand4)"
-                        color="var(--brand1)"
-                      >
-                        {vehicle?.year}
-                      </Text>
-                      <Text
-                        padding="0.3rem"
-                        bg="var(--brand4)"
-                        marginLeft="2rem"
-                        color="var(--brand1)"
-                      >
-                        {vehicle?.km} KM
-                      </Text>
-                    </div>
-                    {/* <p>{params.vehicleId}</p> */}
-
-                    <Button
-                      color="var(--whiteFixed)"
-                      marginTop="1rem"
-                      variant="solid"
-                      bg="var(--brand1)"
-                    >
-                      Comprar
-                    </Button>
-                  </div>
-                </div>
-
-                <Text color="var(--grey1)">
-                  {/* R$ {mask(vehicle?.price, ['99.999.99', '9.999.999.99'])} */}
-                  R${vehicle.price}
-                </Text>
-              </CardFooter>
-            </Card>
-
-            <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
-              <Text>
-                <p
-                  style={{
-                    color: 'var(--grey1)',
-                    fontWeight: '600',
-                    marginBottom: '2rem'
-                  }}
-                >
-                  Descrição
-                </p>
-                {vehicle?.description}
-              </Text>
-            </Card>
+            <InfoVehicle vehicle={vehicle} />
 
             <Comments comments={comments} />
+            {authenticated && <CommentMaker props={propsCommentMaker} />}
 
-            <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                  src={image!}
-                  // src="https://s3.static.brasilescola.uol.com.br/be/2020/08/lobo-guara.jpg"
-                  alt="Green double couch with wooden legs"
-                  style={{
-                    borderRadius: '100%',
-                    width: '60px',
-                    height: '60px'
-                  }}
-                />
-                <Text marginLeft="2rem">{name}</Text>
-              </div>
-              <textarea value={text}
-                onChange={(e) => setText(e.target.value)}
-                style={{ height: '100px', resize: 'none' }}>
-              </textarea>
-              <Button
-                marginTop='2rem'
-                w='100px'
-                variant='solid'
-                bg='var(--brand1)'
-                color='var(--whiteFixed)'
-                type='submit'
-                onClick={handleCommentButton}
-              >
-                Comentar
-              </Button>
-            </Card>
           </section>
           <section style={{ width: '30%' }}>
-            <Card
-              display="flex"
-              flexDirection="column"
-              padding={'2rem 4rem'}
-              bg={'var(--grey10)'}
-            >
-              FOTOS
-              <Flex gap="1rem">
-                {vehicle.images &&
-                  vehicle.images.map(image => (
-                    <Flex
-                      align="center"
-                      justifyContent="center"
-                      bg="var(--grey7)"
-                      gap="1rem"
-                      w="90px"
-                      h="90px"
-                    >
-                      <Image w="65px" h="50px" src={image.image} />
-                    </Flex>
-                  ))}
-              </Flex>
-            </Card>
-            <Card mt="2rem" padding={'2rem 4rem'} bg={'var(--grey10)'}>
-              <Flex
-                justifyContent="center"
-                flexWrap="wrap"
-                flexDirection="column"
-                alignItems="center"
-                gap="1rem"
-              >
-                <img
-                  style={{
-                    borderRadius: '100%',
-                    width: '100px',
-                    height: '100px'
-                  }}
-                  src={image!}
-                />
-                <Text color="var(--grey1)" fontWeight="600">
-                  {name}
-                </Text>
-                <Text>
-                  Various versions have evolved over the years, sometimes by
-                  accident, sometimes on purpose (injected humour and the like)
-                </Text>
-                <Button
-                  bg="var(--grey0)"
-                  color="var(--whiteFixed)"
-                  w="280px"
-                  h="48px"
-                >
-                  Ver Todos os Anuncios
-                </Button>
-              </Flex>
-            </Card>
+            <VehiclesPics vehicle={vehicle} />
+            <VehicleOwnerCard owner={vehicle.user} />
           </section>
         </main>
       </Flex>
