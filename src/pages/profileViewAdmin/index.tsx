@@ -2,39 +2,53 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
-import { settingProfileView, settingVehicles } from '../../services/api'
+import { settingProfileView, settingUser, settingVehicles } from '../../services/api'
+import { IUser } from '../../interfaces/IUser'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
 import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
 import { userMocked } from '../../mocks/mocksUser'
+import { IVehicleState } from '../../interfaces/IVehicle'
+
+
 
 const ProfileViewAdmin = () => {
 
-  const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
-  const [userInfo, setUserInfo] = useState(userMocked)
+  const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
+  const [userInfo, setUserInfo] = useState({} as IUser)
+  const { isOpen: isVehicleEdit, onOpen: onVehicleEdit, onClose: onVehicleEditClose } = useDisclosure()
+  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
-  const id = 'df7b5399-e596-4b98-95eb-9a776017da0d'
 
   useEffect(() => {
+    settingUser(setUserInfo)
     settingVehicles(setVehicles)
-    settingProfileView({ setUserInfo, id })
+    settingProfileView({ setUserInfo })
   }, []);
 
   const isOwnerSellerPerfil = true
 
   const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
   const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
+  const propsUserArea = { setUserInfo, userInfo, onOpen: onVehicleEdit }
+  const propsModalCreateAd = { vehicles, setVehicles, isOpen: isVehicleEdit, onClose: onVehicleEditClose }
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
+      <ModalAdminEditProfile
+        onClose={onEditUserClose}
+        setUserInfo={setUserInfo}
+        isOpen={isEditUserOpen}
+        userInfo={userInfo}
+      />
       <Box w="100%">
-        <ModalCreateAd isOpen={isOpen} onClose={onClose} />
-        <Header />
+        <ModalCreateAd props={propsModalCreateAd} />
+        <Header onEditUserOpen={onEditUserOpen} />
 
-        <UserArea setUserInfo={setUserInfo} userInfo={userInfo} onOpen={onOpen} />
+        <UserArea props={propsUserArea} />
 
         <VehiclesCarousel props={propsCarro} />
         <VehiclesCarousel props={propsMoto} />

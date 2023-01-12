@@ -1,15 +1,26 @@
-import { Drawer, DrawerBody, DrawerContent, Flex } from '@chakra-ui/react'
+import { Drawer, DrawerBody, DrawerContent, Flex, Button } from '@chakra-ui/react';
 import { NavItem } from './NavItem'
+import { useState } from 'react'
+import { IUser } from '../../interfaces/IUser'
+import { settingUser } from '../../services/api'
+import { useAuth } from '../../providers/AuthProvider';
 
 interface MenuProps {
   isOpen: boolean
   onClose: () => void
+  onEditUserOpen: () => void
   mt: string
   ml: string
   display: string[]
 }
 
-export const Menu = ({ isOpen, onClose, ml, mt, display }: MenuProps) => {
+export const Menu = ({ isOpen, onClose, ml, mt, display, onEditUserOpen }: MenuProps) => {
+  const [user, setUser] = useState({} as IUser)
+  settingUser(setUser)
+
+  const { signOut } = useAuth()
+
+
   return (
     <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
       <DrawerContent
@@ -29,10 +40,32 @@ export const Menu = ({ isOpen, onClose, ml, mt, display }: MenuProps) => {
             align="start"
             gap="25px"
           >
-            <NavItem content="Editar Perfil" redirectTo="/" />
-            <NavItem content="Editar Endereço" redirectTo="/" />
-            <NavItem content="Minhas compras" redirectTo="/" />
-            <NavItem content="Sair" redirectTo="/" />
+            <Button
+              color="var(--grey2)"
+              fontSize="2xl"
+              fontWeight="400"
+              bg="transparent"
+              _hover={{ transform: 'translateY(-7px)' }}
+              transition="ease 0s, transform 0.2s"
+              onClick={onEditUserOpen}
+            >
+              Editar Perfil
+            </Button>
+            {
+              user.isSeller && (<NavItem content="Meus anúncios" redirectTo="/profile" />)
+            }
+            <Button
+              color="var(--grey2)"
+              fontSize="2xl"
+              fontWeight="400"
+              bg="transparent"
+              _hover={{ transform: 'translateY(-7px)' }}
+              transition="ease 0s, transform 0.2s"
+              onClick={signOut}
+            >
+              Sair
+            </Button>
+
           </Flex>
         </DrawerBody>
       </DrawerContent>

@@ -10,22 +10,29 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { isValidURL } from '../../../utils/validateUrl'
 import { mask, unMask } from 'remask'
 import { patterns } from '../../../utils/patternMaskPrice'
+import { postingVehicle } from '../../../services/api'
+import { IModalCreateAdProps } from '.'
 
 interface CreateAd {
   title: string
   year: string
   km: string
+  plate: string
+  color: string
   description: string
   price: string
   image: string
   extraInputImages: string
 }
 
-interface CreateAdProps {
-  onClose: () => void
-}
 
-export const CreateAdForm = ({ onClose }: CreateAdProps) => {
+
+export const CreateAdForm = ({ props }: IModalCreateAdProps) => {
+
+  const { vehicles, setVehicles, onClose } = props
+
+
+
   const [activeItem, setActiveItem] = useState('Venda')
   const [activeVehicle, setActiveVehicle] = useState('Carro')
   const [extraInput, setExtraInput] = useState<number[]>([])
@@ -76,8 +83,12 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
     const formateData = {
       ...cleanData,
       type: activeVehicle.toLowerCase(),
-      images: [image, extraInputImages, ...imagesExtra]
+      images: [image, extraInputImages, ...imagesExtra] as any,
+      isActive: true
     }
+    console.log(formateData)
+    const postingValues = { data: formateData, vehicles, setVehicles, onClose }
+    postingVehicle(formateData, vehicles, setVehicles, onClose)
   }
 
   return (
@@ -151,6 +162,22 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
           </Box>
         </Flex>
 
+        <Input
+          label="Placa"
+          placeholder="Digitar a placa do veículo"
+          w={['100%', '100%', '', '']}
+          {...register('plate')}
+          error={errors.plate}
+        />
+
+        <Input
+          label="Cor"
+          placeholder="Digitar a cor do veículo"
+          w={['100%', '100%', '', '']}
+          {...register('color')}
+          error={errors.color}
+
+        />
         <Textarea
           label="Descrição"
           placeholder="Digitar descrição"

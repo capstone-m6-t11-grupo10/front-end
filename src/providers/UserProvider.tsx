@@ -44,7 +44,7 @@ interface UserContextData {
   ) => Promise<void>
   error: string
   signIn: ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => Promise<void>
-  getUser: () => Promise<void>
+  getUser: () => Promise<IUser>
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData)
@@ -58,7 +58,7 @@ export const useUser = () => {
 export const UserProvider = ({ children }: AuthContextProps) => {
   const [user, setUser] = useState<IUser>({} as IUser)
   const [payload, setPayload] = useState<IPayload>({} as IPayload)
-  const [error, setError] = useState('')
+  const [error, setError] = useState('Email ou senha inválidos')
   const navigation = useNavigate()
 
 
@@ -92,16 +92,15 @@ export const UserProvider = ({ children }: AuthContextProps) => {
       },
     }
 
-    const currentPayload: IPayload = jwt_decode(tokenUser!)
+    const currentPayload: IPayload = await jwt_decode(tokenUser!)
     setPayload(currentPayload)
-
-    console.log(currentPayload)
 
     const id = currentPayload.id
 
-    await api.get(`http://localhost:3000/users/${id}`, header).then(res => setUser(res.data))
-    // setUser(userMocked)
-    console.log(user)
+    const user = await api.get(`http://localhost:3000/users/${id}`, header).then(res => res.data)
+    setUser(user)
+    console.log('PROVIDER', user)
+    return user
   }, [])
 
   const signIn = useCallback(async ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => {
