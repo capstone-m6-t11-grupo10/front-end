@@ -16,9 +16,13 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../providers/UserProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
+
+import { Label } from '../registration/components/Label'
+
 import { IUser } from '../../interfaces/IUser'
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 import { settingUser, settingVehicles } from '../../services/api'
+
 
 export interface ILoginRequest {
   email: string
@@ -33,7 +37,6 @@ export default function Login() {
   useEffect(() => {
     settingUser(setUserInfo)
   }, [])
-
 
   const {
     register,
@@ -89,7 +92,6 @@ export default function Login() {
           color={'var(--grey0)'}
           fontWeight={600}
           fontSize={'16px'}
-          marginLeft={'10px'}
         >
           <h2
             style={{
@@ -97,64 +99,40 @@ export default function Login() {
               fontWeight: '500',
               fontSize: '24px',
               lineHeight: '30px',
-              fontStyle: 'normal'
+              fontStyle: 'normal',
+              marginBottom: '10px'
             }}
           >
             Login
           </h2>
-          <FormLabel
-            style={{
-              color: 'var(--grey1)',
-              fontWeight: '500',
-              fontSize: '14px',
-              lineHeight: '17px',
-              fontStyle: 'normal'
-            }}
-          >
-            Usuário
-          </FormLabel>
-
+          <Label content="Usuário" />
           <Input
             w={'100%'}
             h={'48px'}
+            mt="-10px"
             borderRadius={'4px'}
-            padding={'0px 16px 0px 16px'}
-            gap={'10px'}
             isInvalid={!!errors.email}
             {...register('email')}
-            placeholder={'Digitar Usuário'}
+            placeholder={'Digitar usuário'}
           />
           {!errors.email ? (
-            <FormHelperText>Entre com seu Usuário</FormHelperText>
+            <FormHelperText></FormHelperText>
           ) : (
-            <FormHelperText color="red">
-              {errors.email.message}
-            </FormHelperText>
+            <FormHelperText color="red">{errors.email.message}</FormHelperText>
           )}
-          <FormLabel
-            style={{
-              color: 'var(--grey1)',
-              fontWeight: '500',
-              fontSize: '14px',
-              lineHeight: '17px',
-              fontStyle: 'normal'
-            }}
-          >
-            Senha
-          </FormLabel>
+          <Label content="Senha" />
           <Input
             w={'100%'}
             h={'48px'}
+            mt="-10px"
             borderRadius={'4px'}
-            padding={'0px 16px 0px 16px'}
-            gap={'10px'}
             isInvalid={!!errors.password}
             type="password"
             {...register('password')}
-            placeholder={'Digitar Senha'}
+            placeholder={'Digitar senha'}
           />
           {!errors.password ? (
-            <FormHelperText>Digite sua senha</FormHelperText>
+            <FormHelperText></FormHelperText>
           ) : (
             <FormHelperText color="red">
               {errors.password.message}
@@ -165,8 +143,9 @@ export default function Login() {
               color: 'var(--grey2)',
               fontWeight: '500',
               fontSize: '14px',
-              lineHeight: '24px',
-              fontStyle: 'normal'
+              fontStyle: 'normal',
+              marginLeft: '17rem',
+              marginTop: '-25px'
             }}
           >
             Esqueci minha senha
@@ -174,15 +153,13 @@ export default function Login() {
           <Button
             w={'100%'}
             h={'48px'}
-            padding={'12px 28px'}
-            gap={'10px'}
+            mt="21px"
             borderRadius={'4px'}
             borderStyle={'1px solid var(--grey4)'}
             backgroundColor={'var(--brand1)'}
             color={'var(--whiteFixed)'}
             fontWeight={600}
             fontSize={'16px'}
-            marginLeft={'10px'}
             type="submit"
           >
             Entrar
@@ -192,8 +169,9 @@ export default function Login() {
               color: 'var(--grey2)',
               fontWeight: '500',
               fontSize: '14px',
-              lineHeight: '24px',
-              fontStyle: 'normal'
+              fontStyle: 'normal',
+              marginLeft: '6rem',
+              marginTop: '10px'
             }}
           >
             Ainda não possui uma conta?
@@ -202,15 +180,13 @@ export default function Login() {
             isLoading={loading}
             w={'100%'}
             h={'48px'}
-            padding={'12px 28px'}
-            gap={'10px'}
+            mt={'10px'}
             borderRadius={'4px'}
             border={'1px solid var(--grey4)'}
             backgroundColor={'var(--grey10)'}
             color={'var(--grey0)'}
             fontWeight={600}
             fontSize={'16px'}
-            marginLeft={'10px'}
             onClick={navigateToRegister}
           >
             Cadastrar
