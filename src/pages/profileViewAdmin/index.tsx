@@ -2,7 +2,9 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
-import { settingProfileView, settingVehicles } from '../../services/api'
+import { settingProfileView, settingUser, settingVehicles } from '../../services/api'
+import { IUser } from '../../interfaces/IUser'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
@@ -15,14 +17,14 @@ import { IVehicleState } from '../../interfaces/IVehicle'
 const ProfileViewAdmin = () => {
 
   const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
-  const [userInfo, setUserInfo] = useState(userMocked)
+  const [userInfo, setUserInfo] = useState({} as IUser)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const id = 'df7b5399-e596-4b98-95eb-9a776017da0d'
 
   useEffect(() => {
+    settingUser(setUserInfo)
     settingVehicles(setVehicles)
-    settingProfileView({ setUserInfo, id })
+    settingProfileView({ setUserInfo })
   }, [onClose]);
 
   const isOwnerSellerPerfil = true
@@ -32,12 +34,20 @@ const ProfileViewAdmin = () => {
   const propsUserArea = { setUserInfo, userInfo, onOpen }
   const propsModalCreateAd = { vehicles, setVehicles, isOpen, onClose }
 
+  const { isOpen: isUserModalOpen, onOpen: onUserModalOpen, onClose: onUserModalClose } = useDisclosure()
+  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
   return (
     <>
+      <ModalAdminEditProfile
+        onClose={onEditUserClose}
+        setUserInfo={setUserInfo}
+        isOpen={isEditUserOpen}
+        userInfo={userInfo}
+      />
       <Box w="100%">
         <ModalCreateAd props={propsModalCreateAd} />
-        <Header />
+        <Header onEditUserOpen={onEditUserOpen} />
 
         <UserArea props={propsUserArea} />
 

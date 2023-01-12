@@ -1,15 +1,18 @@
 import { Button, ButtonProps } from '@chakra-ui/react'
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-scroll'
 
 interface NavItemProps extends ButtonProps {
   content: string
-  redirectTo: string
+  redirectTo?: string
   to?: any
 }
 
 export const NavItem = ({ content, redirectTo, to, ...rest }: NavItemProps) => {
   const navigate = useNavigate()
+
+  const handleNavigate = useCallback(() => navigate(redirectTo || '/'), [])
 
   return (
     <Button
@@ -20,6 +23,7 @@ export const NavItem = ({ content, redirectTo, to, ...rest }: NavItemProps) => {
       _hover={{ transform: 'translateY(-7px)' }}
       transition="ease 0s, transform 0.2s"
       {...rest}
+      onClick={handleNavigate}
     >
       {!to && content}
       {to && (
