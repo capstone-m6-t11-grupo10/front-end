@@ -12,11 +12,16 @@ import { AiOutlineClose } from "react-icons/ai"
 import { useDisclosure } from "@chakra-ui/react"
 import { useAuth } from "../../providers/AuthProvider"
 import { useNavigate } from "react-router"
+import { useEffect } from 'react';
+
 export interface HeaderProps {
-  setCurrentId?: React.Dispatch<React.SetStateAction<string>>
+  onEditUserOpen: () => void
 }
-export const Header = ({ setCurrentId }: HeaderProps) => {
-  const { authenticated } = useAuth()
+
+export const Header = ({ onEditUserOpen }: HeaderProps) => {
+  const { verifyAuthenticated } = useAuth()
+
+  const isAuthenticated = verifyAuthenticated()
 
   const {
     isOpen: isMenuMobileOpen,
@@ -71,7 +76,7 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
           </HStack>
 
           <HStack paddingLeft="5" spacing="5">
-            {authenticated ? (
+            {isAuthenticated ? (
               <User onToggle={onMenuToggle} />
             ) : (
               <>
@@ -99,6 +104,7 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
           _hover={{ bg: "transparent" }}
         />
         <MenuMobile
+          onEditUserOpen={onEditUserOpen}
           isOpen={isMenuMobileOpen}
           onClose={onMenuMobileClose}
           ml="0px"
@@ -108,6 +114,7 @@ export const Header = ({ setCurrentId }: HeaderProps) => {
           display={["none", "none", "flex", "flex"]}
           isOpen={isMenuOpen}
           onClose={onMenuClose}
+          onEditUserOpen={onEditUserOpen}
           ml="auto"
           mt="80px"
         />

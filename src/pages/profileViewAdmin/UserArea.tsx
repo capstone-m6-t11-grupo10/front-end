@@ -1,6 +1,9 @@
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
 import { IUser } from '../../interfaces/IUser'
+import { settingUser } from '../../services/api'
+import { useState } from 'react'
+import { isValidURL } from '../../utils/validateUrl';
 interface UserAreaProps {
   userInfo: IUser,
   setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
@@ -8,6 +11,12 @@ interface UserAreaProps {
 }
 
 export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
+  const [user, setUser] = useState({} as IUser)
+
+  settingUser(setUser)
+
+  const isValidImage = isValidURL(user.image)
+
   return (
     <Flex
       bgGradient="linear(to-b, var(--brand1) 55%, transparent  45%)"
@@ -24,15 +33,19 @@ export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
         mt="8"
         padding="35px 35px"
       >
-        <Box
+        <Flex
+          justifyContent="center"
+          alignItems="center"
           boxSize="104px"
-          minW="104px"
-          minH="104px"
           borderRadius="50%"
-          bg="var(--brand1)"
         >
-          <Image w="100%" />
-        </Box>
+          {isValidImage ? (
+
+            <Image w="100%" src={user.image} />
+          ) : (
+            <Avatar name={user.name} boxSize='75%' />
+          )}
+        </Flex>
 
         <Box>
           <Text
@@ -41,8 +54,7 @@ export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
             fontWeight="600"
             fontSize={['1.5rem', '2rem']}
           >
-            <ModalAdminEditProfile props={{ setUserInfo, userInfo }} />
-            {' '}{userInfo.name}{' '}
+            {' '}{user.name}{' '}
             <Text
               display="inline-block"
               fontWeight="500"
@@ -57,7 +69,7 @@ export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
           </Text>
         </Box>
         <Text color="var(--grey2)" fontWeight="400" fontSize="1.2rem">
-          {userInfo.bio}
+          {user.bio}
         </Text>
 
         <Button

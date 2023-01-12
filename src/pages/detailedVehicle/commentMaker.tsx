@@ -5,62 +5,68 @@ import { useState } from "react";
 import { IComment } from "../../interfaces/coments";
 import { IUser } from "../../interfaces/IUser";
 import { gettingComments, postingComment, settingUser } from "../../services/api";
+import { isValidURL } from "../../utils/validateUrl";
+import { Avatar } from '@chakra-ui/react';
 
 interface IMakeCommentsProps {
-    props: {
-        idVehicle: string
-        setComments: React.Dispatch<React.SetStateAction<IComment[]>>
+  props: {
+    idVehicle: string
+    setComments: React.Dispatch<React.SetStateAction<IComment[]>>
 
-    }
+  }
 }
 
 
 
 export const CommentMaker = ({ props }: IMakeCommentsProps) => {
-    const [text, setText] = useState("");
-    const [user, setUser] = useState({} as IUser)
-    const { idVehicle, setComments } = props
+  const [text, setText] = useState("");
+  const { idVehicle, setComments } = props
+  const [user, setUser] = useState({} as IUser)
 
-    settingUser(setUser)
-    const { image, name } = user
+  settingUser(setUser)
+  const { image, name } = user
 
 
-    const handleCommentButton = async () => {
-        await postingComment(text, idVehicle)
-        gettingComments({ id: idVehicle, setComments })
-        setText('')
-    }
+  const handleCommentButton = async () => {
+    await postingComment(text, idVehicle)
+    gettingComments({ id: idVehicle, setComments })
+    setText('')
+  }
+  const imageIsValid = isValidURL(image)
 
-    return (
-        <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                    src={image}
-                    // src="https://s3.static.brasilescola.uol.com.br/be/2020/08/lobo-guara.jpg"
-                    alt="Foto do teu perfil"
-                    style={{
-                        borderRadius: '100%',
-                        width: '60px',
-                        height: '60px'
-                    }}
-                />
-                <Text marginLeft="2rem">{name}</Text>
-            </div>
-            <textarea value={text}
-                onChange={(e) => setText(e.target.value)}
-                style={{ height: '100px', resize: 'none' }}>
-            </textarea>
-            <Button
-                marginTop='2rem'
-                w='100px'
-                variant='solid'
-                bg='var(--brand1)'
-                color='var(--whiteFixed)'
-                type='submit'
-                onClick={handleCommentButton}
-            >
-                Comentar
-            </Button>
-        </Card>
-    )
+  return (
+    <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {imageIsValid ? (
+          <img
+            src={image}
+            alt="Foto"
+            style={{
+              borderRadius: '100%',
+              width: '60px',
+              height: '60px'
+            }}
+          />
+        ) : (
+          <Avatar name={name} boxSize='35px' />
+        )}
+        <Text marginLeft="2rem">{name}</Text>
+      </div>
+      <textarea value={text}
+        onChange={(e) => setText(e.target.value)}
+        style={{ height: '100px', resize: 'none' }}>
+      </textarea>
+      <Button
+        marginTop='2rem'
+        w='100px'
+        variant='solid'
+        bg='var(--brand1)'
+        color='var(--whiteFixed)'
+        type='submit'
+        onClick={handleCommentButton}
+      >
+        Comentar
+      </Button>
+    </Card>
+  )
 }

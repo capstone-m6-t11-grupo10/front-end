@@ -2,23 +2,25 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
-import { settingProfileView, settingVehicles } from '../../services/api'
+import { settingProfileView, settingUser, settingVehicles } from '../../services/api'
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
 import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
 import { userMocked } from '../../mocks/mocksUser'
+import { IUser } from '../../interfaces/IUser'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 
 const ProfileViewAdmin = () => {
 
   const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
-  const [userInfo, setUserInfo] = useState(userMocked)
+  const [userInfo, setUserInfo] = useState({} as IUser)
 
-  const id = 'df7b5399-e596-4b98-95eb-9a776017da0d'
+
 
   useEffect(() => {
+    settingUser(setUserInfo)
     settingVehicles(setVehicles)
-    settingProfileView({ setUserInfo, id })
   }, []);
 
   const isOwnerSellerPerfil = true
@@ -26,15 +28,22 @@ const ProfileViewAdmin = () => {
   const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
   const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isUserModalOpen, onOpen: onUserModalOpen, onClose: onUserModalClose } = useDisclosure()
+  const { isOpen: isEditUserOpen, onToggle: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
   return (
     <>
+      <ModalAdminEditProfile
+        onClose={onEditUserClose}
+        setUserInfo={setUserInfo}
+        isOpen={isEditUserOpen}
+        userInfo={userInfo}
+      />
       <Box w="100%">
-        <ModalCreateAd isOpen={isOpen} onClose={onClose} />
-        <Header />
+        <ModalCreateAd isOpen={isUserModalOpen} onClose={onUserModalClose} />
+        <Header onEditUserOpen={onEditUserOpen} />
 
-        <UserArea setUserInfo={setUserInfo} userInfo={userInfo} onOpen={onOpen} />
+        <UserArea setUserInfo={setUserInfo} userInfo={userInfo} onOpen={onUserModalOpen} />
 
         <VehiclesCarousel props={propsCarro} />
         <VehiclesCarousel props={propsMoto} />
