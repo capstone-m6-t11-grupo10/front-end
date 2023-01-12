@@ -54,6 +54,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
         fontWeight="400"
         fontSize="1.4rem"
         color="var(--grey2)"
+        h='45px'
       >
         {description}
       </Text>

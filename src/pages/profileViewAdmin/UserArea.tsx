@@ -1,13 +1,19 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
+import { Dispatch, SetStateAction } from 'react';
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
 import { IUser } from '../../interfaces/IUser'
-interface UserAreaProps {
-  userInfo: IUser,
-  setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
-  onOpen: () => void,
+import { IVehicle } from '../../interfaces/IVehicle';
+interface IUserAreaProps {
+  props: {
+    userInfo: IUser,
+    setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
+    onOpen: () => void,
+
+  }
 }
 
-export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
+export const UserArea = ({ props }: IUserAreaProps) => {
+  const { setUserInfo, userInfo, onOpen } = props
   return (
     <Flex
       bgGradient="linear(to-b, var(--brand1) 55%, transparent  45%)"

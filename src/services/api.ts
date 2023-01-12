@@ -5,6 +5,7 @@ import { IComment } from '../interfaces/coments';
 import { IBodyEdit, IBodyEditProps, IUser, IUserEdit } from '../interfaces/IUser';
 import { IPayload } from '../interfaces/payload';
 import jwt_decode from 'jwt-decode'
+import { IVehicle, IVehicleCreation, IVehicleState } from '../interfaces/IVehicle';
 
 const baseUrl = 'http://localhost:3000/'
 
@@ -14,9 +15,10 @@ const api = axios.create({
 })
 
 
-export const settingVehicles = async (setVehicles: Dispatch<SetStateAction<{ carros: never[]; motos: never[]; }>>) => {
+export const settingVehicles = async (setVehicles: Dispatch<SetStateAction<IVehicleState>>) => {
   const response = await api.get("http://localhost:3000/vehicles").then((response) => {
     setVehicles(response.data)
+
   });
   return response
 }
@@ -44,6 +46,29 @@ export const edittingProfile = async (props: IBodyEditProps) => {
 
   const response = await api.patch("http://localhost:3000/users/" + id, body).then((response) => {
     setUserInfo(response.data)
+  });
+}
+interface IPostingVehicle {
+  data: IVehicleCreation
+  onclose: () => void
+  vehicles: IVehicleState
+  setVehicles: Dispatch<SetStateAction<IVehicleState>>
+}
+
+export const postingVehicle = async (data: IVehicleCreation, vehicles: IVehicleState, setVehicles: Dispatch<SetStateAction<IVehicleState>>, onclose: () => void) => {
+  const tokenUser: string = localStorage.getItem('tokenUser') || ''
+  const header = {
+    headers: {
+      Authorization: `Bearer ${tokenUser}`,
+    },
+  }
+
+  const currentPayload: IPayload = jwt_decode(tokenUser!)
+  const id = currentPayload.id
+
+  const response = await api.post(`http://localhost:3000/vehicles/${id}`, data, header).then((response) => {
+
+    onclose()
   });
 }
 
@@ -82,7 +107,9 @@ export const gettingComments = async ({ id, setComments }: IGettingCommentsProps
   const response = await api.get(`http://localhost:3000/comments/${id}`)
   setComments(response.data)
 }
+interface IPostVehicleProps {
 
+}
 
 
 export default api

@@ -7,12 +7,15 @@ import MockLeilao, { vehiclesList } from '../../components/mockLeilao'
 import { Footer } from '../../components/Footer'
 import { BannerHome } from '../../components/BannerHome'
 import { noVehicleMocked } from '../../mocks/mocksVehicles'
+import { IVehicle, IVehicleState } from '../../interfaces/IVehicle/index';
 
 const Home = () => {
-  const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
+
+  const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
   const [currentId, setCurrentId] = useState('')
   useEffect(() => {
     settingVehicles(setVehicles)
+    console.log(vehicles)
   }, [])
 
   const isOwnerSellerPerfil = false
