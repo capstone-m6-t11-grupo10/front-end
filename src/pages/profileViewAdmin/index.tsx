@@ -18,24 +18,23 @@ const ProfileViewAdmin = () => {
 
   const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
   const [userInfo, setUserInfo] = useState({} as IUser)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isVehicleEdit, onOpen: onVehicleEdit, onClose: onVehicleEditClose } = useDisclosure()
+  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
 
   useEffect(() => {
     settingUser(setUserInfo)
     settingVehicles(setVehicles)
     settingProfileView({ setUserInfo })
-  }, [onClose]);
+  }, []);
 
   const isOwnerSellerPerfil = true
 
   const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
   const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
-  const propsUserArea = { setUserInfo, userInfo, onOpen }
-  const propsModalCreateAd = { vehicles, setVehicles, isOpen, onClose }
+  const propsUserArea = { setUserInfo, userInfo, onOpen: onVehicleEdit }
+  const propsModalCreateAd = { vehicles, setVehicles, isOpen: isVehicleEdit, onClose: onVehicleEditClose }
 
-  const { isOpen: isUserModalOpen, onOpen: onUserModalOpen, onClose: onUserModalClose } = useDisclosure()
-  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
   return (
     <>

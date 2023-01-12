@@ -29,6 +29,8 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
     navigation(`/detailedVehicle/${id}`);
   }
 
+  console.log(images)
+
   return (
     <Card
       w={['230px', '270px', '312px']}
@@ -39,7 +41,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
       onClick={handleClick}
     >
       <IsActiveVehicle props={{ isActive }} />
-      <Image src={images[0].image} w='100%' objectFit='cover' h='215px' />
+      <Image src={images[0]?.image} w='100%' objectFit='cover' h='215px' />
       <Heading
         noOfLines={1}
         m="15px 0px"

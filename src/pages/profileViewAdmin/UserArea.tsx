@@ -1,9 +1,11 @@
-<<<<<<< HEAD
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
-import { Dispatch, SetStateAction } from 'react';
+import { IVehicle } from '../../interfaces/IVehicle';
+
+import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
 import { IUser } from '../../interfaces/IUser'
-import { IVehicle } from '../../interfaces/IVehicle';
+import { settingUser } from '../../services/api'
+import { useState } from 'react'
+import { isValidURL } from '../../utils/validateUrl';
 interface IUserAreaProps {
   props: {
     userInfo: IUser,
@@ -13,29 +15,15 @@ interface IUserAreaProps {
   }
 }
 
+
 export const UserArea = ({ props }: IUserAreaProps) => {
   const { setUserInfo, userInfo, onOpen } = props
-=======
-import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
-import { IUser } from '../../interfaces/IUser'
-import { settingUser } from '../../services/api'
-import { useState } from 'react'
-import { isValidURL } from '../../utils/validateUrl';
-interface UserAreaProps {
-  userInfo: IUser,
-  setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
-  onOpen: () => void,
-}
-
-export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
   const [user, setUser] = useState({} as IUser)
 
   settingUser(setUser)
 
   const isValidImage = isValidURL(user.image)
 
->>>>>>> 61363bb9c23527b2d48425c537978b369e6347f3
   return (
     <Flex
       bgGradient="linear(to-b, var(--brand1) 55%, transparent  45%)"

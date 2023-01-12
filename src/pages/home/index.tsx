@@ -7,23 +7,17 @@ import MockLeilao, { vehiclesList } from '../../components/mockLeilao'
 import { Footer } from '../../components/Footer'
 import { BannerHome } from '../../components/BannerHome'
 import { noVehicleMocked } from '../../mocks/mocksVehicles'
-<<<<<<< HEAD
 import { IVehicle, IVehicleState } from '../../interfaces/IVehicle/index';
 
-const Home = () => {
 
-  const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
-  const [currentId, setCurrentId] = useState('')
-=======
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 import { IUser } from '../../interfaces/IUser';
 
 const Home = () => {
-  const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
+  const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
 
   const [userInfo, setUserInfo] = useState({} as IUser)
 
->>>>>>> 61363bb9c23527b2d48425c537978b369e6347f3
   useEffect(() => {
     settingUser(setUserInfo)
     settingVehicles(setVehicles)

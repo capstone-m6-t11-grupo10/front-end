@@ -23,6 +23,7 @@ const api = axios.create({
 export const settingVehicles = async (setVehicles: Dispatch<SetStateAction<IVehicleState>>) => {
   const response = await api.get("http://localhost:3000/vehicles").then((response) => {
     setVehicles(response.data)
+    console.log(response)
 
   });
   return response
@@ -71,7 +72,7 @@ interface IPostingVehicle {
   setVehicles: Dispatch<SetStateAction<IVehicleState>>
 }
 
-export const postingVehicle = async (data: IVehicleCreation, vehicles: IVehicleState, setVehicles: Dispatch<SetStateAction<IVehicleState>>, onclose: () => void) => {
+export const postingVehicle = async (data: IVehicleCreation, vehicles: IVehicleState, setVehicles: Dispatch<SetStateAction<IVehicleState>>, onClose: () => void) => {
   const tokenUser: string = localStorage.getItem('tokenUser') || ''
   const header = {
     headers: {
@@ -83,8 +84,18 @@ export const postingVehicle = async (data: IVehicleCreation, vehicles: IVehicleS
   const id = currentPayload.id
 
   const response = await api.post(`http://localhost:3000/vehicles/${id}`, data, header).then((response) => {
+    console.log(response.data)
 
-    onclose()
+    const currentVehicles = vehicles
+    const newVehicle = response.data
+    if (newVehicle.type === 'carro') {
+      currentVehicles.carros = [...currentVehicles.carros, newVehicle]
+    } else { currentVehicles.motos = [...currentVehicles.motos, newVehicle] }
+
+    // setVehicles(currentVehicles)
+    // console.log(currentVehicles)
+
+    onClose
   });
 }
 
