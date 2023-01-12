@@ -3,33 +3,38 @@ import { useEffect, useState } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { settingProfileView, settingUser, settingVehicles } from '../../services/api'
+import { IUser } from '../../interfaces/IUser'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 
 import { UserArea } from './UserArea'
 import { VehiclesCarousel } from './VehiclesCarousel'
 import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
 import { userMocked } from '../../mocks/mocksUser'
-import { IUser } from '../../interfaces/IUser'
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
+import { IVehicleState } from '../../interfaces/IVehicle'
+
+
 
 const ProfileViewAdmin = () => {
 
-  const [vehicles, setVehicles] = useState({ carros: [], motos: [] })
+  const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
   const [userInfo, setUserInfo] = useState({} as IUser)
-
+  const { isOpen: isVehicleEdit, onOpen: onVehicleEdit, onClose: onVehicleEditClose } = useDisclosure()
+  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
 
   useEffect(() => {
     settingUser(setUserInfo)
     settingVehicles(setVehicles)
+    settingProfileView({ setUserInfo })
   }, []);
 
   const isOwnerSellerPerfil = true
 
   const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
   const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
+  const propsUserArea = { setUserInfo, userInfo, onOpen: onVehicleEdit }
+  const propsModalCreateAd = { vehicles, setVehicles, isOpen: isVehicleEdit, onClose: onVehicleEditClose }
 
-  const { isOpen: isUserModalOpen, onOpen: onUserModalOpen, onClose: onUserModalClose } = useDisclosure()
-  const { isOpen: isEditUserOpen, onToggle: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
   return (
     <>
@@ -40,10 +45,10 @@ const ProfileViewAdmin = () => {
         userInfo={userInfo}
       />
       <Box w="100%">
-        <ModalCreateAd isOpen={isUserModalOpen} onClose={onUserModalClose} />
+        <ModalCreateAd props={propsModalCreateAd} />
         <Header onEditUserOpen={onEditUserOpen} />
 
-        <UserArea setUserInfo={setUserInfo} userInfo={userInfo} onOpen={onUserModalOpen} />
+        <UserArea props={propsUserArea} />
 
         <VehiclesCarousel props={propsCarro} />
         <VehiclesCarousel props={propsMoto} />
