@@ -24,6 +24,9 @@ import { CommentMaker } from './commentMaker'
 import { VehicleOwnerCard } from './vehicleOwnerCard'
 import { InfoVehicle } from './infoVehicle'
 import { VehiclesPics } from './vehiclesPics'
+import { useDisclosure } from '@chakra-ui/react';
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
+import { IUser } from '../../interfaces/IUser'
 
 
 
@@ -33,6 +36,7 @@ export default function DetailedVehicle() {
   const params = useParams()
   const { listVehicle, vehicle } = UseVehicle()
   const [comments, setComments] = useState(commentsMocked)
+  const [userInfo, setUserInfo] = useState({} as IUser)
 
   const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
   const idVehicle: string = params.vehicleId || ''
@@ -43,52 +47,57 @@ export default function DetailedVehicle() {
   useEffect(() => {
     idVehicle ? listVehicle(idVehicle) : listVehicle(idCarNotFound)
     gettingComments({ id: idVehicle, setComments })
-
   }, [])
 
   const propsCommentMaker = { idVehicle, setComments }
 
+  const { onOpen, onClose, isOpen } = useDisclosure()
 
   return (
-    <Box w="100%">
-      <Flex
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'column'
-        }}
-        bgGradient="linear(to-b, var(--brand1) 40%, transparent 25%)"
-      >
-        <Header />
-        <main
+    <>
+      <ModalAdminEditProfile isOpen={isOpen} onClose={onClose} setUserInfo={setUserInfo} userInfo={userInfo} />
+
+      <Box w="100%">
+        <Flex
           style={{
-            padding: '5rem 10rem',
             display: 'flex',
-            flexDirection: 'row',
-            gap: '2rem'
+            alignItems: 'center',
+            flexDirection: 'column'
           }}
+          bgGradient="linear(to-b, var(--brand1) 40%, transparent 25%)"
         >
-          <section
+          <Header onEditUserOpen={onOpen} />
+          <main
             style={{
-              width: '70%',
+              padding: '5rem 10rem',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '3rem'
+              flexDirection: 'row',
+              gap: '2rem'
             }}
           >
-            <InfoVehicle vehicle={vehicle} />
+            <section
+              style={{
+                width: '70%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '3rem'
+              }}
+            >
+              <InfoVehicle vehicle={vehicle} />
 
-            <Comments comments={comments} />
-            {isAutheticated && <CommentMaker props={propsCommentMaker} />}
+              <Comments comments={comments} />
+              {isAutheticated && <CommentMaker props={propsCommentMaker} />}
 
-          </section>
-          <section style={{ width: '30%' }}>
-            <VehiclesPics vehicle={vehicle} />
-            <VehicleOwnerCard owner={vehicle.user} />
-          </section>
-        </main>
-      </Flex>
-      <Footer />
-    </Box>
+            </section>
+            <section style={{ width: '30%' }}>
+              <VehiclesPics vehicle={vehicle} />
+              <VehicleOwnerCard owner={vehicle.user} />
+            </section>
+          </main>
+        </Flex>
+        <Footer />
+      </Box>
+    </>
+
   )
 }

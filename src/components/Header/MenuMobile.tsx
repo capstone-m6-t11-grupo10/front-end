@@ -11,17 +11,31 @@ import { NavItem } from './NavItem'
 
 import { useDisclosure } from '@chakra-ui/react'
 import { useAuth } from '../../providers/AuthProvider'
+import { settingUser } from '../../services/api'
+import { useState } from 'react'
+import { IUser } from '../../interfaces/IUser'
 
 interface MenuMobileProps {
   isOpen: boolean
   onClose: () => void
+  onEditUserOpen: () => void
   mt: string
   ml: string
 }
 
-export const MenuMobile = ({ isOpen, onClose, ml, mt }: MenuMobileProps) => {
+
+
+export const MenuMobile = ({ isOpen, onClose, onEditUserOpen, ml, mt }: MenuMobileProps) => {
   const { onToggle, isOpen: isUserOpen, onClose: onUserClose } = useDisclosure()
-  const { authenticated } = useAuth()
+  const { verifyAuthenticated } = useAuth()
+
+  const [user, setUser] = useState({} as IUser)
+
+  settingUser(setUser)
+
+
+  const isAuthenticated = verifyAuthenticated()
+
 
   return (
     <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
@@ -48,7 +62,7 @@ export const MenuMobile = ({ isOpen, onClose, ml, mt }: MenuMobileProps) => {
           </Flex>
         </DrawerBody>
         <DrawerFooter borderTop="1px solid var(--grey4)">
-          {authenticated ? (
+          {isAuthenticated ? (
             <Flex w="100%">
               <User onToggle={onToggle} />
             </Flex>
@@ -77,6 +91,7 @@ export const MenuMobile = ({ isOpen, onClose, ml, mt }: MenuMobileProps) => {
           )}
 
           <Menu
+            onEditUserOpen={onEditUserOpen}
             display={['flex', 'flex', 'none', 'none']}
             isOpen={isUserOpen}
             onClose={onUserClose}

@@ -58,7 +58,7 @@ export const useUser = () => {
 export const UserProvider = ({ children }: AuthContextProps) => {
   const [user, setUser] = useState<IUser>({} as IUser)
   const [payload, setPayload] = useState<IPayload>({} as IPayload)
-  const [error, setError] = useState('')
+  const [error, setError] = useState('Email ou senha inválidos')
   const navigation = useNavigate()
 
 

@@ -9,7 +9,7 @@ import { Textarea } from '../../components/Textarea'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Label } from './components/Label'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { mask, unMask } from 'remask'
 import {
   cpfPattern,
@@ -18,13 +18,15 @@ import {
   phonePattern
 } from '../../utils/registerMasks'
 
-import { ICreateUser } from '../../interfaces/IUser'
+import { ICreateUser, IUser } from '../../interfaces/IUser'
 import { useUser } from '../../providers/UserProvider'
 import { createUserSchema } from '../../schemas/index'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { ModalErrorRegister } from '../../components/Modals/ModalErrorRegister'
 import { ModalSuccessRegister } from '../../components/Modals/ModalSuccessRegister'
+import { settingUser } from '../../services/api'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
 
 export default function Registration() {
   const [accountType, setAccountType] = useState('Comprador')
@@ -34,6 +36,12 @@ export default function Registration() {
   const [maskPhone, setMaskPhone] = useState('')
   const [maskBirthDate, setMaskBirthDate] = useState('')
   const [maskCep, setMaskCep] = useState('')
+  const [userInfo, setUserInfo] = useState({} as IUser)
+
+
+  useEffect(() => {
+    settingUser(setUserInfo)
+  }, [])
 
   const { signUp } = useUser()
 
@@ -60,6 +68,13 @@ export default function Registration() {
     onClose: onErrorModalClose,
     onOpen: onErrorModalOpen
   } = useDisclosure()
+
+  const {
+    onOpen: onModalEditOpen,
+    onClose: onModalEditClose,
+    isOpen: isModalEditOpen
+  } = useDisclosure()
+
 
   const handleMaskCpf = (cpf: string) => {
     const originalValue = unMask(cpf)
@@ -143,6 +158,13 @@ export default function Registration() {
 
   return (
     <>
+      <ModalAdminEditProfile
+        isOpen={isModalEditOpen}
+        onClose={onModalEditClose}
+        setUserInfo={setUserInfo}
+        userInfo={userInfo}
+      />
+
       <ModalSuccessRegister
         isOpen={isSuccessModalOpen}
         onClose={onSuccessModalClose}
@@ -158,7 +180,7 @@ export default function Registration() {
         justifyItems="center"
         gap="35px"
       >
-        <Header />
+        <Header onEditUserOpen={onModalEditOpen} />
         <FormControl
           alignSelf="center"
           w={['90%', '70%', '411px', '411px']}

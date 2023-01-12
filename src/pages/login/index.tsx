@@ -14,8 +14,11 @@ import { Footer } from '../../components/Footer'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../providers/UserProvider'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
+import { IUser } from '../../interfaces/IUser'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
+import { settingUser, settingVehicles } from '../../services/api'
 
 export interface ILoginRequest {
   email: string
@@ -24,6 +27,12 @@ export interface ILoginRequest {
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
+  const [userInfo, setUserInfo] = useState({} as IUser)
+
+
+  useEffect(() => {
+    settingUser(setUserInfo)
+  }, [])
 
 
   const {
@@ -51,8 +60,11 @@ export default function Login() {
       .catch(() => setLoading(false))
   }
 
+  const { onOpen, onClose: onModalEditClose, isOpen: isModalEditOpen } = useDisclosure()
+
   return (
     <>
+      <ModalAdminEditProfile isOpen={isModalEditOpen} onClose={onModalEditClose} setUserInfo={setUserInfo} userInfo={userInfo} />
       <ModalErrorLogin isOpen={isModalErrorOpen} onClose={onModalErrorClose} />
       <Flex
         w="100%"
@@ -61,7 +73,7 @@ export default function Login() {
         gap="5rem"
         overflowY="hidden"
       >
-        <Header />
+        <Header onEditUserOpen={onOpen} />
         <FormControl
           w={['90%', '70%', '411px', '411px']}
           display={'flex'}
