@@ -28,9 +28,6 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
   const kmPatternMask = ['9', '99', '99.9', '99.99', '999.9', '999.99', '999.999', '9999.9', '9999.99']
 
   const handleClick = useCallback(() => navigation(`/detailedVehicle/${id}`), [])
-
-  console.log(images)
-
   return (
     <Card
       w={['230px', '270px', '312px']}

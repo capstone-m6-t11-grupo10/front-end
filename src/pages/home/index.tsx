@@ -8,10 +8,6 @@ import { Footer } from '../../components/Footer'
 import { UseVehicle } from '../../providers/vehicleProvider';
 import { useUser } from '../../providers/UserProvider';
 import { vehiclesList } from '../../mocks/mocksLeilao';
-import { noVehicleMocked } from '../../mocks/mocksVehicles'
-import { IVehicle, IVehicleState } from '../../interfaces/IVehicle/index';
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
-import { IUser } from '../../interfaces/IUser';
 
 
 const Home = () => {

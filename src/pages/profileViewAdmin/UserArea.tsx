@@ -1,5 +1,3 @@
-import { IVehicle } from '../../interfaces/IVehicle';
-
 import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
 import { isValidURL } from '../../utils/validateUrl';
 

@@ -15,12 +15,6 @@ export const createAdSchema = z.object({
     .min(1, 'Quilometragem é obrigatória')
     .refine(km => isValidNumber(km, true), 'Insira um valor válido')
     .transform(km => +km),
-  plate: z
-    .string()
-    .length(7, 'A placa deve conter 7 numeros.'),
-  color: z
-    .string()
-    .min(1, "Este campo é obrigatório"),
   description: z.string().refine(description => {
     const descriptionList = description.split(' ')
 

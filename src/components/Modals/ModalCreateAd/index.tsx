@@ -7,25 +7,16 @@ import {
   ModalHeader,
   ModalOverlay
 } from '@chakra-ui/react'
-import { Dispatch, SetStateAction } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
-import { IVehicle, IVehicleState } from '../../../interfaces/IVehicle'
 
 import { CreateAdForm } from './CreateAdForm'
 
-export interface IModalCreateAdProps {
-  props: {
-    isOpen: boolean
-    onClose: () => void
-    vehicles: IVehicleState,
-    setVehicles: Dispatch<SetStateAction<IVehicleState>>
-  }
+interface ModalCreateAdProps {
+  isOpen: boolean
+  onClose: () => void
 }
 
-export const ModalCreateAd = ({ props }: IModalCreateAdProps) => {
-  const { isOpen, onClose } = props
-
-
+export const ModalCreateAd = ({ isOpen, onClose }: ModalCreateAdProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={['md', 'lg', '2xl', '3xl']}>
       <ModalOverlay />
@@ -55,7 +46,7 @@ export const ModalCreateAd = ({ props }: IModalCreateAdProps) => {
           />
         </ModalHeader>
         <ModalBody>
-          <CreateAdForm props={props} />
+          <CreateAdForm onClose={onClose} />
         </ModalBody>
       </ModalContent>
     </Modal>

@@ -6,9 +6,6 @@ import { VehiclesCarousel } from './VehiclesCarousel'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { UserArea } from './UserArea'
-import { IUser } from '../../interfaces/IUser'
-import { userMocked } from '../../mocks/mocksUser'
-import { IVehicleState } from '../../interfaces/IVehicle'
 import { UseVehicle } from '../../providers/vehicleProvider'
 import { useUser } from '../../providers/UserProvider';
 
@@ -40,7 +37,7 @@ const ProfileViewAdmin = () => {
         isOpen={isEditUserOpen}
       />
       <Box w="100%">
-        <ModalCreateAd props={propsModalCreateAd} />
+        <ModalCreateAd isOpen={isUserModalOpen} onClose={onUserModalClose} />
         <Header onEditUserOpen={onEditUserOpen} />
 
 
