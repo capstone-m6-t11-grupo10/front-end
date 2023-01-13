@@ -12,11 +12,27 @@ export interface IVehicle {
   description: string
   isActive: boolean
   price: string
-  type: string
+  type: 'carro' | 'moto'
   images: Image[]
   km: number
   year: string
   user: IUser
+}
+export interface IVehicleState {
+  carros: IVehicle[]
+  motos: IVehicle[]
+}
+export interface IVehicleCreation {
+  title: string
+  description: string
+  isActive: boolean
+  price: string
+  type: string
+  color: string
+  plate: string
+  images: Image[]
+  km: string
+  year: string
 }
 
 export interface IVehicleLeilao {

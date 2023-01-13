@@ -1,5 +1,8 @@
+import { IVehicle } from '../../interfaces/IVehicle';
+
 import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
 import { isValidURL } from '../../utils/validateUrl';
+
 import { useUser } from '../../providers/UserProvider';
 
 interface UserAreaProps {
@@ -9,6 +12,7 @@ interface UserAreaProps {
 export const UserArea = ({ onOpen }: UserAreaProps) => {
 
   const { user } = useUser()
+
 
   let isValidImage = false
 

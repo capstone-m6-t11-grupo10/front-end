@@ -29,6 +29,8 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
 
   const handleClick = useCallback(() => navigation(`/detailedVehicle/${id}`), [])
 
+  console.log(images)
+
   return (
     <Card
       w={['230px', '270px', '312px']}
@@ -55,7 +57,8 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
         fontWeight="400"
         fontSize="1.4rem"
         color="var(--grey2)"
-        h='40px'
+
+        h='45px'
       >
         {description}
       </Text>

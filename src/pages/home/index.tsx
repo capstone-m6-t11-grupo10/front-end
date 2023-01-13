@@ -1,22 +1,24 @@
 import { useEffect } from 'react'
 import { Flex, useDisclosure } from '@chakra-ui/react';
-
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
 import { VehiclesCarousel } from '../profileViewAdmin/VehiclesCarousel'
 import { BannerHome } from '../../components/BannerHome'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
-
 import { UseVehicle } from '../../providers/vehicleProvider';
 import { useUser } from '../../providers/UserProvider';
-
 import { vehiclesList } from '../../mocks/mocksLeilao';
+import { noVehicleMocked } from '../../mocks/mocksVehicles'
+import { IVehicle, IVehicleState } from '../../interfaces/IVehicle/index';
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
+import { IUser } from '../../interfaces/IUser';
+
 
 const Home = () => {
-
   useEffect(() => {
     listVehicles()
     getUser()
+
   }, [])
 
   const { listVehicles, cars, motorbikes } = UseVehicle()
