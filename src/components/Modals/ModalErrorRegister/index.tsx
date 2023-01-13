@@ -13,12 +13,12 @@ import { AiOutlineClose } from 'react-icons/ai'
 import { Flex } from '@chakra-ui/react'
 import { useUser } from '../../../providers/UserProvider'
 
-interface ModalErrorRegister {
+interface IModalErrorRegister {
   isOpen: boolean
   onClose: () => void
 }
 
-export const ModalErrorRegister = ({ isOpen, onClose }: ModalErrorRegister) => {
+export const ModalErrorRegister = ({ isOpen, onClose }: IModalErrorRegister) => {
   const { error } = useUser()
 
   return (

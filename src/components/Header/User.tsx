@@ -1,7 +1,6 @@
-import { Avatar, Box, Flex, Image, Text } from '@chakra-ui/react'
-import { useState } from 'react'
-import { IUser } from '../../interfaces/IUser'
-import { settingUser } from '../../services/api'
+import { useEffect } from 'react';
+import { Avatar, Flex, Image, Text } from '@chakra-ui/react'
+import { useUser } from '../../providers/UserProvider';
 
 interface UserProps {
   onToggle: () => void
@@ -9,10 +8,11 @@ interface UserProps {
 
 export const User = ({ onToggle }: UserProps) => {
 
-  const [user, setUser] = useState({} as IUser)
+  const { getUser, user } = useUser()
 
-  settingUser(setUser)
-
+  useEffect(() => {
+    getUser()
+  }, [])
 
   return (
     <>
@@ -24,18 +24,18 @@ export const User = ({ onToggle }: UserProps) => {
         role="button"
       >
         <Flex boxSize="32px" bg='35px' alignItems='center'>
-          {user.image ? (
+          {user?.image ? (
             <Image
               boxSize='100%'
               borderRadius="100%"
               src={user.image}
             />
           ) : (
-            <Avatar name={user.name} boxSize='100%' />
+            <Avatar name={user?.name} boxSize='100%' />
           )}
         </Flex>
         <Text fontWeight="400" fontSize="1.6rem" color="var(--grey2)">
-          {user.name}
+          {user?.name}
         </Text>
       </Flex>
     </>

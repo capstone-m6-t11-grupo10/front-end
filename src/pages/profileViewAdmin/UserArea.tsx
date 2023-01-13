@@ -1,21 +1,20 @@
 import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
-import { IUser } from '../../interfaces/IUser'
-import { settingUser } from '../../services/api'
-import { useState } from 'react'
 import { isValidURL } from '../../utils/validateUrl';
+import { useUser } from '../../providers/UserProvider';
+
 interface UserAreaProps {
-  userInfo: IUser,
-  setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
   onOpen: () => void,
 }
 
-export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
-  const [user, setUser] = useState({} as IUser)
+export const UserArea = ({ onOpen }: UserAreaProps) => {
 
-  settingUser(setUser)
+  const { user } = useUser()
 
-  const isValidImage = isValidURL(user.image)
+  let isValidImage = false
+
+  if (user?.image) {
+    isValidImage = isValidURL(user.image)
+  }
 
   return (
     <Flex
@@ -39,7 +38,7 @@ export const UserArea = ({ setUserInfo, userInfo, onOpen }: UserAreaProps) => {
           boxSize="104px"
           borderRadius="50%"
         >
-          {isValidImage ? (
+          {isValidImage && user.image ? (
 
             <Image w="100%" src={user.image} />
           ) : (

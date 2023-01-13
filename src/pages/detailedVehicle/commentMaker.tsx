@@ -1,45 +1,57 @@
+import { useState, useEffect, useCallback } from 'react';
+
 import { Button } from "@chakra-ui/button"
 import { Card } from "@chakra-ui/card"
 import { Text } from "@chakra-ui/layout"
-import { useState } from "react";
-import { IComment } from "../../interfaces/coments";
-import { IUser } from "../../interfaces/IUser";
-import { gettingComments, postingComment, settingUser } from "../../services/api";
-import { isValidURL } from "../../utils/validateUrl";
 import { Avatar } from '@chakra-ui/react';
+
+import { useComments } from '../../providers/CommentsProvider';
+import { useUser } from '../../providers/UserProvider';
+
+import { isValidURL } from "../../utils/validateUrl";
+import { Textarea } from '../../components/Textarea';
 
 interface IMakeCommentsProps {
   props: {
     idVehicle: string
-    setComments: React.Dispatch<React.SetStateAction<IComment[]>>
-
   }
 }
 
-
-
 export const CommentMaker = ({ props }: IMakeCommentsProps) => {
+  useEffect(() => {
+    getUser()
+  }, [])
+
   const [text, setText] = useState("");
-  const { idVehicle, setComments } = props
-  const [user, setUser] = useState({} as IUser)
 
-  settingUser(setUser)
-  const { image, name } = user
+  const { idVehicle } = props
 
+  const { getUser, user } = useUser()
+  const { postingComment, gettingComments } = useComments()
 
-  const handleCommentButton = async () => {
+  const handleCommentButton = useCallback(async () => {
     await postingComment(text, idVehicle)
-    gettingComments({ id: idVehicle, setComments })
+
+    gettingComments(idVehicle)
     setText('')
+  }, [text])
+
+  const handleTextValue = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value)
+  }, [])
+
+  let imageIsValid = false
+
+  if (user.image) {
+    imageIsValid = isValidURL(user.image)
   }
-  const imageIsValid = isValidURL(image)
 
   return (
     <Card padding={'2rem 4rem'} bg={'var(--grey10)'}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        {imageIsValid ? (
+        {imageIsValid && user.image ? (
           <img
-            src={image}
+            src={user.image}
             alt="Foto"
             style={{
               borderRadius: '100%',
@@ -48,14 +60,11 @@ export const CommentMaker = ({ props }: IMakeCommentsProps) => {
             }}
           />
         ) : (
-          <Avatar name={name} boxSize='35px' />
+          <Avatar name={user?.name} boxSize='35px' />
         )}
-        <Text marginLeft="2rem">{name}</Text>
+        <Text marginLeft="2rem">{user?.name}</Text>
       </div>
-      <textarea value={text}
-        onChange={(e) => setText(e.target.value)}
-        style={{ height: '100px', resize: 'none' }}>
-      </textarea>
+      <Textarea placeholder='' value={text} onChange={handleTextValue} />
       <Button
         marginTop='2rem'
         w='100px'

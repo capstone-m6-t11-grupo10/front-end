@@ -1,9 +1,8 @@
 import { Drawer, DrawerBody, DrawerContent, Flex, Button } from '@chakra-ui/react';
 import { NavItem } from './NavItem'
-import { useState } from 'react'
-import { IUser } from '../../interfaces/IUser'
-import { settingUser } from '../../services/api'
+import { useEffect } from 'react';
 import { useAuth } from '../../providers/AuthProvider';
+import { useUser } from '../../providers/UserProvider';
 
 interface MenuProps {
   isOpen: boolean
@@ -15,11 +14,13 @@ interface MenuProps {
 }
 
 export const Menu = ({ isOpen, onClose, ml, mt, display, onEditUserOpen }: MenuProps) => {
-  const [user, setUser] = useState({} as IUser)
-  settingUser(setUser)
+  const { getUser, user } = useUser()
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   const { signOut } = useAuth()
-
 
   return (
     <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
@@ -52,7 +53,7 @@ export const Menu = ({ isOpen, onClose, ml, mt, display, onEditUserOpen }: MenuP
               Editar Perfil
             </Button>
             {
-              user.isSeller && (<NavItem content="Meus anúncios" redirectTo="/profile" />)
+              user?.isSeller && (<NavItem content="Meus anúncios" redirectTo="/profile" />)
             }
             <Button
               color="var(--grey2)"

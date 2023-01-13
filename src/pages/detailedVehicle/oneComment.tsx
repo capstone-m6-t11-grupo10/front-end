@@ -1,10 +1,9 @@
 import { Avatar, Text, Box } from '@chakra-ui/react';
-import { IComment } from "../../interfaces/coments"
-import { useUser } from "../../providers/UserProvider"
+import { ICommentFirst } from "../../interfaces/comments"
 import { isValidURL } from '../../utils/validateUrl';
 
 interface IOneComment {
-  commentary: IComment
+  commentary: ICommentFirst
 }
 
 export const OneComment = ({ commentary }: IOneComment) => {

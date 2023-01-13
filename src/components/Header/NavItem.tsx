@@ -1,7 +1,8 @@
-import { Button, ButtonProps } from '@chakra-ui/react'
 import { useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+
 import { Link } from 'react-scroll'
+import { useNavigate } from 'react-router-dom'
+import { Button, ButtonProps } from '@chakra-ui/react'
 
 interface NavItemProps extends ButtonProps {
   content: string

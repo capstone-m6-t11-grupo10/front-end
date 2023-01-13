@@ -60,6 +60,10 @@ export const TextareaBase: ForwardRefRenderFunction<
     }
   }, [error, value])
 
+  const handleValue = useCallback((e: React.FormEvent<HTMLTextAreaElement>) => {
+    setValue(e.currentTarget.value)
+  }, [])
+
   return (
     <FormControl isInvalid={!!error}>
       {!!label && <FormLabel>{label}</FormLabel>}
@@ -83,7 +87,7 @@ export const TextareaBase: ForwardRefRenderFunction<
             color: 'var(grey3)'
           }}
           onFocus={handleTextareaFocus}
-          onChangeCapture={e => setValue(e.currentTarget.value)}
+          onChangeCapture={handleValue}
           onBlurCapture={handleTextareaBlur}
           ref={ref}
           {...rest}

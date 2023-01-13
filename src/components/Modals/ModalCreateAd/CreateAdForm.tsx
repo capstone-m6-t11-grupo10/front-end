@@ -1,17 +1,23 @@
-import { Flex, ButtonGroup, Text, Box, border } from '@chakra-ui/react'
-import { Textarea } from '../../Textarea'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { Input } from '../../Input'
+import { useEffect, useState, useCallback } from 'react';
+import { Flex, ButtonGroup, Text, Box } from '@chakra-ui/react'
 
+import { Textarea } from '../../Textarea'
+import { Input } from '../../Input'
 import { Button } from './Button'
+
+import { useForm } from 'react-hook-form'
+import { mask, unMask } from 'remask'
+
 import { createAdSchema } from '../../../schemas/advertisement'
 import { zodResolver } from '@hookform/resolvers/zod'
+
 import { isValidURL } from '../../../utils/validateUrl'
-import { mask, unMask } from 'remask'
 import { patterns } from '../../../utils/patternMaskPrice'
 
-interface CreateAd {
+import { UseVehicle } from '../../../providers/vehicleProvider'
+import { useUser } from '../../../providers/UserProvider';
+
+export interface CreateAd {
   title: string
   year: string
   km: string
@@ -28,31 +34,34 @@ interface CreateAdProps {
 export const CreateAdForm = ({ onClose }: CreateAdProps) => {
   const [activeItem, setActiveItem] = useState('Venda')
   const [activeVehicle, setActiveVehicle] = useState('Carro')
+
   const [extraInput, setExtraInput] = useState<number[]>([])
   const [extraImages, setExtraImages] = useState<string[]>([])
+
   const [maskValue, setMaskValue] = useState('')
 
-  const maskPrice = (inputValue: string) => {
-    const originalValue = unMask(inputValue)
-    const maskedValue = mask(originalValue, patterns)
+  const handleExtra = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    setExtraImages([...extraImages, e.currentTarget.value])
+  }, [extraImages])
 
-    setMaskValue(maskedValue)
-  }
+  const maskPrice = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaskValue(mask(unMask(event.target.value), patterns))
+  }, [])
 
-  const handleExtraImages = () => {
+  const addExtraInputField = useCallback(() => {
     if (!!!extraInput.length) {
       return setExtraInput([...extraInput, 1])
     }
     return setExtraInput([...extraInput, extraInput[extraInput.length - 1] + 1])
-  }
+  }, [extraInput])
 
-  const handleClick = (item: string) => {
-    setActiveItem(item)
-  }
+  const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setActiveItem(e.currentTarget.innerText)
+  }, [])
 
-  const handleVehicle = (item: string) => {
-    setActiveVehicle(item)
-  }
+  const handleVehicle = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setActiveVehicle(e.currentTarget.innerText)
+  }, [])
 
   const {
     formState: { errors },
@@ -68,7 +77,16 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
     return validURls
   }
 
+  const { getUser, user } = useUser()
+  const { listVehicles, createVehicle } = UseVehicle()
+
+  useEffect(() => {
+    getUser()
+    listVehicles()
+  }, [])
+
   const handleCreateAd = (data: CreateAd) => {
+
     const { image, extraInputImages, ...cleanData } = data
 
     const imagesExtra = urlSelector(extraImages)
@@ -76,8 +94,12 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
     const formateData = {
       ...cleanData,
       type: activeVehicle.toLowerCase(),
-      images: [image, extraInputImages, ...imagesExtra]
+      images: [image, extraInputImages, ...imagesExtra],
+      userId: user?.id,
+      isActive: true
     }
+
+    createVehicle(user?.id, formateData, onClose)
   }
 
   return (
@@ -95,12 +117,12 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
         <Button
           content="Venda"
           isActive={activeItem === 'Venda'}
-          onClick={e => handleClick(e.currentTarget.innerText)}
+          onClick={handleClick}
         />
         <Button
           content="Leilão"
           isActive={activeItem === 'Leilão'}
-          onClick={e => handleClick(e.currentTarget.innerText)}
+          onClick={handleClick}
         />
       </ButtonGroup>
 
@@ -144,9 +166,7 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
               w={['100%', '100%', '', '']}
               {...register('price')}
               error={errors.price}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                maskPrice(event.target.value)
-              }
+              onChange={maskPrice}
             />
           </Box>
         </Flex>
@@ -166,12 +186,12 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
           <Button
             content="Carro"
             isActive={activeVehicle === 'Carro'}
-            onClick={e => handleVehicle(e.currentTarget.innerText)}
+            onClick={handleVehicle}
           />
           <Button
             content="Moto"
             isActive={activeVehicle === 'Moto'}
-            onClick={e => handleVehicle(e.currentTarget.innerText)}
+            onClick={handleVehicle}
           />
         </ButtonGroup>
 
@@ -192,9 +212,7 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
         {!!extraInput.length &&
           extraInput.map(inputIndex => (
             <Input
-              onChangeCapture={e =>
-                setExtraImages([...extraImages, e.currentTarget.value])
-              }
+              onChangeCapture={handleExtra}
               key={inputIndex}
               label="Imagem extra"
               placeholder="Inserir URL da imagem"
@@ -205,7 +223,7 @@ export const CreateAdForm = ({ onClose }: CreateAdProps) => {
 
       <Button
         content="Adicionar campo para imagens da galeria"
-        onClick={handleExtraImages}
+        onClick={addExtraInputField}
         p="5px 5px"
         bg="var(--brand4)"
         border="1.5px solid var(--brand4)"

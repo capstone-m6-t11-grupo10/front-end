@@ -4,30 +4,30 @@ import { IsActiveVehicle } from './isActive/isActive'
 import { SellerData } from './SellerData'
 import { AdvertiserOptions } from './AdvertiserOptions'
 import { useNavigate } from 'react-router-dom'
+import { useCallback } from 'react';
+import { mask } from 'remask'
+import { patterns } from '../../utils/patternMaskPrice'
 
 export const CardVehicle = ({ props }: IPropsVehicle) => {
   const {
     title,
     description,
     isActive,
-    type,
-    color,
-    plate,
     images,
     price,
     km,
     year,
     user
-  } = props.vehicle
+  } = props?.vehicle
 
   const { isOwnerSellerPerfil } = props
 
   const navigation = useNavigate();
   const id = props.vehicle.id;
 
-  function handleClick() {
-    navigation(`/detailedVehicle/${id}`);
-  }
+  const kmPatternMask = ['9', '99', '99.9', '99.99', '999.9', '999.99', '999.999', '9999.9', '9999.99']
+
+  const handleClick = useCallback(() => navigation(`/detailedVehicle/${id}`), [])
 
   return (
     <Card
@@ -36,10 +36,11 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
       shadow="none"
       outline="none"
       position="relative"
+      py='15px'
       onClick={handleClick}
     >
       <IsActiveVehicle props={{ isActive }} />
-      <Image src={images[0].image} w='100%' objectFit='cover' h='215px' />
+      <Image src={images[0]?.image} w='100%' objectFit='cover' h='215px' />
       <Heading
         noOfLines={1}
         m="15px 0px"
@@ -54,6 +55,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
         fontWeight="400"
         fontSize="1.4rem"
         color="var(--grey2)"
+        h='40px'
       >
         {description}
       </Text>
@@ -68,7 +70,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
         color="var(--brand1)"
       >
         <Box p="4px 8px" bg="var(--brand4)" borderRadius="4px">
-          <Text>{km} km</Text>
+          <Text>{mask(String(km), kmPatternMask)} km</Text>
         </Box>
         <Box p="4px 8px" bg="var(--brand4)" borderRadius="4px">
           <Text>{year}</Text>
@@ -80,7 +82,7 @@ export const CardVehicle = ({ props }: IPropsVehicle) => {
           fontFamily="Lexend"
           fontSize={['1.4rem', '1.6rem']}
         >
-          R$ {price}
+          R$ {mask(price, patterns)}
         </Text>
       </HStack>
       {isOwnerSellerPerfil && <AdvertiserOptions />}

@@ -6,6 +6,7 @@ import {
   FormErrorMessage,
   InputGroup
 } from '@chakra-ui/react'
+
 import {
   ForwardRefRenderFunction,
   forwardRef,
@@ -14,7 +15,7 @@ import {
   useState
 } from 'react'
 
-import { FieldError, useForm } from 'react-hook-form'
+import { FieldError } from 'react-hook-form'
 
 interface InputProps extends ChakraInputProps {
   name: string
@@ -59,6 +60,12 @@ export const InputBase: ForwardRefRenderFunction<
     }
   }, [error, value])
 
+
+  const handleValue = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    setValue(e.currentTarget.value)
+  }, [])
+
+
   return (
     <FormControl isInvalid={!!error}>
       {!!label && <FormLabel>{label}</FormLabel>}
@@ -81,7 +88,7 @@ export const InputBase: ForwardRefRenderFunction<
             color: 'var(--grey3)'
           }}
           onFocus={handleInputFocus}
-          onChangeCapture={e => setValue(e.currentTarget.value)}
+          onChangeCapture={handleValue}
           onBlurCapture={handleInputBlur}
           ref={ref}
           {...rest}

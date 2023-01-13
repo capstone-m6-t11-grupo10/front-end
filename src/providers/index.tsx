@@ -1,12 +1,17 @@
 import { IPropChildren } from '../interfaces/IAddress'
 import { AuthProvider } from './AuthProvider'
+import { CommentsProvider } from './CommentsProvider'
 import { UserProvider } from './UserProvider'
-import { VeihicleProvider } from './vehicleProvider'
+import { VehicleProvider } from './vehicleProvider'
 
 const Providers = ({ children }: IPropChildren) => (
   <AuthProvider>
     <UserProvider>
-      <VeihicleProvider>{children}</VeihicleProvider>
+      <VehicleProvider>
+        <CommentsProvider>
+          {children}
+        </CommentsProvider>
+      </VehicleProvider>
     </UserProvider>
   </AuthProvider>
 )

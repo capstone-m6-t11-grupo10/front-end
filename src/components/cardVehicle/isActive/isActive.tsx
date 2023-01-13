@@ -1,18 +1,4 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Image,
-  Stack,
-  Heading,
-  Text,
-  Divider,
-  ButtonGroup,
-  Button,
-  Box,
-  Spacer
-} from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { IPropsVehicleIsActive } from '../../../interfaces/IVehicle'
 
 export const IsActiveVehicle = ({ props }: IPropsVehicleIsActive) => {

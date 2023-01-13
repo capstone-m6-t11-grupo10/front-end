@@ -19,7 +19,6 @@ const App = () => (
       draggable
       pauseOnHover
     />
-
     <Router />
   </ChakraProvider>
 )

@@ -12,8 +12,9 @@ import {
 import { AiOutlineClose } from 'react-icons/ai'
 import { Flex } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { useCallback } from 'react'
 
-interface ModalSuccessRegister {
+interface IModalSuccessRegister {
   isOpen: boolean
   onClose: () => void
 }
@@ -21,8 +22,12 @@ interface ModalSuccessRegister {
 export const ModalSuccessRegister = ({
   isOpen,
   onClose
-}: ModalSuccessRegister) => {
+}: IModalSuccessRegister) => {
   const navigate = useNavigate()
+
+  const handleNavigate = useCallback(() => {
+    navigate('/login')
+  }, [])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={['md', 'lg', '2xl', '3xl']}>
@@ -74,7 +79,7 @@ export const ModalSuccessRegister = ({
             </Text>
 
             <Button
-              onClick={() => navigate('/login')}
+              onClick={handleNavigate}
               _hover={{ bg: 'var(--brand2)' }}
               w="30%"
               h="40px"

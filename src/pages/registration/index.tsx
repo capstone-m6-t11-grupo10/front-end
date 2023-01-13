@@ -1,15 +1,18 @@
+import { useEffect, useState, useCallback } from 'react';
+
 import { ButtonGroup, FormControl, Heading, Text } from '@chakra-ui/react'
-
-import { Button } from '../../components/Modals/ModalCreateAd/Button'
-import { Input } from '../../components/Input'
-import { useForm } from 'react-hook-form'
-
 import { Flex, Box, useDisclosure } from '@chakra-ui/react'
+
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
+import { ModalSuccessRegister } from '../../components/Modals/ModalSuccessRegister'
+import { ModalErrorRegister } from '../../components/Modals/ModalErrorRegister'
+import { Button } from '../../components/Modals/ModalCreateAd/Button'
 import { Textarea } from '../../components/Textarea'
-import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
+import { Input } from '../../components/Input'
 import { Label } from './components/Label'
-import { useEffect, useState } from 'react'
+
 import { mask, unMask } from 'remask'
 import {
   cpfPattern,
@@ -18,17 +21,17 @@ import {
   phonePattern
 } from '../../utils/registerMasks'
 
-import { ICreateUser, IUser } from '../../interfaces/IUser'
+import { ICreateUser } from '../../interfaces/IUser'
 import { useUser } from '../../providers/UserProvider'
-import { createUserSchema } from '../../schemas/index'
+
+import { autoCompleteAddress } from '../../utils/autoCompleteAddress'
+import { formateDataToRegister } from '../../utils/formateDataToRegister';
+
+import { createUserSchema } from '../../schemas/signUp'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { ModalErrorRegister } from '../../components/Modals/ModalErrorRegister'
-import { ModalSuccessRegister } from '../../components/Modals/ModalSuccessRegister'
-import { settingUser } from '../../services/api'
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
-
-export default function Registration() {
+const Registration = () => {
   const [accountType, setAccountType] = useState('Comprador')
   const [loading, setLoading] = useState(false)
 
@@ -36,14 +39,12 @@ export default function Registration() {
   const [maskPhone, setMaskPhone] = useState('')
   const [maskBirthDate, setMaskBirthDate] = useState('')
   const [maskCep, setMaskCep] = useState('')
-  const [userInfo, setUserInfo] = useState({} as IUser)
 
+  const { getUser, signUp } = useUser()
 
   useEffect(() => {
-    settingUser(setUserInfo)
+    getUser()
   }, [])
-
-  const { signUp } = useUser()
 
   const {
     register,
@@ -76,80 +77,36 @@ export default function Registration() {
   } = useDisclosure()
 
 
-  const handleMaskCpf = (cpf: string) => {
-    const originalValue = unMask(cpf)
-    const maskedValue = mask(originalValue, cpfPattern)
+  const handleMaskCpf = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaskCpf(mask(unMask(event.target.value), cpfPattern))
+  }, [])
 
-    setMaskCpf(maskedValue)
-  }
 
-  const handleMaskPhone = (phone: string) => {
-    const originalValue = unMask(phone)
-    const maskedValue = mask(originalValue, phonePattern)
+  const handleMaskPhone = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaskPhone(mask(unMask(event.target.value), phonePattern))
+  }, [])
 
-    setMaskPhone(maskedValue)
-  }
+  const handleMaskBirthDate = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaskBirthDate(mask(unMask(event.target.value), birthDatePattern))
+  }, [])
 
-  const handleMaskBirthDate = (date: string) => {
-    const originalValue = unMask(date)
-    const maskedValue = mask(originalValue, birthDatePattern)
+  const handleMaskCep = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaskCep(mask(unMask(event.target.value), cepPattern))
+  }, [])
 
-    setMaskBirthDate(maskedValue)
-  }
+  const handleActiveButton = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setAccountType(e.currentTarget.innerText)
+  }, [])
 
-  const handleMaskCep = (cep: string) => {
-    const originalValue = unMask(cep)
-    const maskedValue = mask(originalValue, cepPattern)
-
-    setMaskCep(maskedValue)
-  }
-
-  const handleActiveButton = (item: string) => {
-    setAccountType(item)
-  }
-
-  const autoCompleteAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const cep = unMask(event.target.value)
-
-    fetch(`https://viacep.com.br/ws/${cep}/json`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.erro) {
-          throw new Error()
-        }
-
-        const { localidade, logradouro, uf } = data
-
-        setValue('state', uf)
-        setValue('city', localidade)
-        setValue('street', logradouro)
-
-        setFocus('number')
-        clearErrors(['cep', 'state', 'city', 'street'])
-      })
-      .catch(() => {
-        setError('cep', {
-          type: 'disabled',
-          message: 'Insira uma CEP válido'
-        })
-      })
-  }
+  const handleAddress = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const manipulateForm = { clearErrors, setError, setFocus, setValue }
+    autoCompleteAddress(event, manipulateForm)
+  }, [])
 
   const handleForm = (data: ICreateUser) => {
     setLoading(true)
 
-    const { passwordConfirm, cep, city, complement, number, state, street, ...cleanData } = data
-
-    const address = {
-      cep,
-      city,
-      complement,
-      number,
-      state,
-      street
-    }
-
-    const formateData = { ...cleanData, isSeller: accountType === 'Anunciante', address }
+    const formateData = formateDataToRegister(data, accountType)
 
     signUp(formateData, onSuccessModalOpen, onErrorModalOpen)
       .then(() => setLoading(false))
@@ -161,8 +118,6 @@ export default function Registration() {
       <ModalAdminEditProfile
         isOpen={isModalEditOpen}
         onClose={onModalEditClose}
-        setUserInfo={setUserInfo}
-        userInfo={userInfo}
       />
 
       <ModalSuccessRegister
@@ -228,9 +183,7 @@ export default function Registration() {
             error={errors.cpf}
             {...register('cpf')}
             placeholder={'000.000.000-00'}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              handleMaskCpf(event.target.value)
-            }
+            onChange={handleMaskCpf}
           />
           <Label content="Celular" />
 
@@ -240,9 +193,7 @@ export default function Registration() {
             error={errors.phone}
             {...register('phone')}
             placeholder="(DDD) 90000-0000"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              handleMaskPhone(event.target.value)
-            }
+            onChange={handleMaskPhone}
           />
           <Label content="Data de Nascimento" />
 
@@ -252,9 +203,7 @@ export default function Registration() {
             error={errors.birthDate}
             {...register('birthDate')}
             placeholder={'00/00/0000'}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              handleMaskBirthDate(event.target.value)
-            }
+            onChange={handleMaskBirthDate}
           />
           <Label content="Descrição" />
 
@@ -278,15 +227,13 @@ export default function Registration() {
           <Label content="CEP" />
 
           <Input
-            onBlurCapture={autoCompleteAddress}
+            onBlurCapture={handleAddress}
             value={maskCep}
             mt="-10px"
             error={errors.cep}
             {...register('cep')}
             placeholder="00000-000"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              handleMaskCep(event.target.value)
-            }}
+            onChange={handleMaskCep}
           />
           <Flex w="100%" gap="10px">
             <Box>
@@ -361,14 +308,14 @@ export default function Registration() {
               w="50%"
               border="1px solid var(--grey4)"
               isActive={accountType === 'Comprador'}
-              onClick={e => handleActiveButton(e.currentTarget.innerText)}
+              onClick={handleActiveButton}
               content="Comprador"
             />
 
             <Button
               fontSize={['1rem', '1.4rem']}
               isActive={accountType === 'Anunciante'}
-              onClick={e => handleActiveButton(e.currentTarget.innerText)}
+              onClick={handleActiveButton}
               w="50%"
               border="1px solid var(--grey4)"
               content="Anunciante"
@@ -411,3 +358,5 @@ export default function Registration() {
     </>
   )
 }
+
+export default Registration

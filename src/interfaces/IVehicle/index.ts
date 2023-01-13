@@ -1,9 +1,11 @@
 import { IPost } from '../IPost'
 import { IUser } from '../IUser'
+
 export interface Image {
   id: string
   image: string
 }
+
 export interface IVehicle {
   id: string
   title: string
@@ -11,8 +13,6 @@ export interface IVehicle {
   isActive: boolean
   price: string
   type: string
-  color: string
-  plate: string
   images: Image[]
   km: number
   year: string
@@ -30,6 +30,7 @@ export interface IVehicleLeilao {
   year: string
   user: IUser
 }
+
 export interface IVehicleLeilaoProps {
   props: {
     id: string
@@ -72,4 +73,16 @@ export interface IVehicleCreated {
   title: string
   year: string
   type: string
+}
+
+export interface IVehicleRequest {
+  type: string
+  images: string[]
+  userId: string
+  isActive: boolean
+  title: string
+  year: string
+  km: string
+  description: string
+  price: string
 }
