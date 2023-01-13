@@ -1,61 +1,44 @@
-import { Header } from '../../components/Header'
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Heading,
-  Text,
-  Button,
-  Flex,
-  Box
-} from '@chakra-ui/react'
-import { useParams } from 'react-router-dom'
-import { Footer } from '../../components/Footer'
-//essa funcao vai retornar os valores para meu front
-import { UseVehicle } from '../../providers/vehicleProvider'
 import { useEffect, useState } from 'react'
-import { useAuth } from '../../providers/AuthProvider'
-import { gettingComments, postingComment } from '../../services/api'
-import { Comments } from './comments'
-import { commentsMocked } from '../../mocks/mocksComments'
-import { useUser } from '../../providers/UserProvider'
-import { CommentMaker } from './commentMaker'
-import { VehicleOwnerCard } from './vehicleOwnerCard'
-import { InfoVehicle } from './infoVehicle'
-import { VehiclesPics } from './vehiclesPics'
-import { useDisclosure } from '@chakra-ui/react';
+import { Flex, Box, useDisclosure } from '@chakra-ui/react'
+
+import { useParams } from 'react-router-dom'
+
 import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
-import { IUser } from '../../interfaces/IUser'
+import { VehicleOwnerCard } from './vehicleOwnerCard'
+import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
+import { VehiclesPics } from './vehiclesPics'
+import { CommentMaker } from './commentMaker'
+import { InfoVehicle } from './infoVehicle'
+import { Comments } from './comments'
 
+import { UseVehicle } from '../../providers/vehicleProvider'
+import { useAuth } from '../../providers/AuthProvider'
+import { useComments } from '../../providers/CommentsProvider';
 
-
-
-export default function DetailedVehicle() {
-
-  const params = useParams()
-  const { listVehicle, vehicle } = UseVehicle()
-  const [comments, setComments] = useState(commentsMocked)
-  const [userInfo, setUserInfo] = useState({} as IUser)
-
-  const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
-  const idVehicle: string = params.vehicleId || ''
-
-  const { verifyAuthenticated } = useAuth()
-  const isAutheticated = verifyAuthenticated()
+const DetailedVehicle = () => {
+  const { gettingComments, comments } = useComments()
 
   useEffect(() => {
     idVehicle ? listVehicle(idVehicle) : listVehicle(idCarNotFound)
-    gettingComments({ id: idVehicle, setComments })
+
+    gettingComments(idVehicle)
   }, [])
 
-  const propsCommentMaker = { idVehicle, setComments }
-
   const { onOpen, onClose, isOpen } = useDisclosure()
+  const { listVehicle, vehicle } = UseVehicle()
+  const { verifyAuthenticated } = useAuth()
+
+  const params = useParams()
+  const isAuthenticated = verifyAuthenticated()
+
+  const idVehicle: string = params.vehicleId || ''
+  const idCarNotFound = 'f52c9c0e-aa92-497b-99e5-ad05c0c1e6ff'
+  const propsCommentMaker = { idVehicle }
 
   return (
     <>
-      <ModalAdminEditProfile isOpen={isOpen} onClose={onClose} setUserInfo={setUserInfo} userInfo={userInfo} />
+      <ModalAdminEditProfile isOpen={isOpen} onClose={onClose} />
 
       <Box w="100%">
         <Flex
@@ -86,7 +69,7 @@ export default function DetailedVehicle() {
               <InfoVehicle vehicle={vehicle} />
 
               <Comments comments={comments} />
-              {isAutheticated && <CommentMaker props={propsCommentMaker} />}
+              {isAuthenticated && <CommentMaker props={propsCommentMaker} />}
 
             </section>
             <section style={{ width: '30%' }}>
@@ -101,3 +84,5 @@ export default function DetailedVehicle() {
 
   )
 }
+
+export default DetailedVehicle

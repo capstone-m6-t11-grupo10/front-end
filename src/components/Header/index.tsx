@@ -1,4 +1,5 @@
-import { Flex, IconButton, HStack, Image } from "@chakra-ui/react"
+import { Flex, IconButton, HStack, Image, useDisclosure } from "@chakra-ui/react"
+
 import { User } from "./User"
 import { Menu } from "./Menu"
 import { NavItem } from "./NavItem"
@@ -8,11 +9,11 @@ import Logo from "../../assets/colorfulLogo.svg"
 
 import { GiHamburgerMenu } from "react-icons/gi"
 import { AiOutlineClose } from "react-icons/ai"
-
-import { useDisclosure } from "@chakra-ui/react"
-import { useAuth } from "../../providers/AuthProvider"
 import { useNavigate } from "react-router"
-import { useEffect } from 'react';
+
+import { useAuth } from "../../providers/AuthProvider"
+import { useCallback } from 'react';
+
 
 export interface HeaderProps {
   onEditUserOpen: () => void
@@ -38,10 +39,7 @@ export const Header = ({ onEditUserOpen }: HeaderProps) => {
 
   const navigation = useNavigate();
 
-  function handleSubmit() {
-    navigation(`/`);
-  }
-
+  const handleSubmit = useCallback(() => navigation(`/`), [])
 
   return (
     <Flex as="nav" width="100%">

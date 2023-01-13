@@ -1,19 +1,20 @@
+import { useEffect } from 'react';
+
 import {
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
-  Flex
+  Flex,
+  useDisclosure
 } from '@chakra-ui/react'
+
 import { Menu } from './Menu'
 import { User } from './User'
 import { NavItem } from './NavItem'
 
-import { useDisclosure } from '@chakra-ui/react'
 import { useAuth } from '../../providers/AuthProvider'
-import { settingUser } from '../../services/api'
-import { useState } from 'react'
-import { IUser } from '../../interfaces/IUser'
+import { useUser } from '../../providers/UserProvider';
 
 interface MenuMobileProps {
   isOpen: boolean
@@ -23,19 +24,17 @@ interface MenuMobileProps {
   ml: string
 }
 
-
-
 export const MenuMobile = ({ isOpen, onClose, onEditUserOpen, ml, mt }: MenuMobileProps) => {
   const { onToggle, isOpen: isUserOpen, onClose: onUserClose } = useDisclosure()
   const { verifyAuthenticated } = useAuth()
 
-  const [user, setUser] = useState({} as IUser)
+  const { getUser } = useUser()
 
-  settingUser(setUser)
-
+  useEffect(() => {
+    getUser()
+  }, [])
 
   const isAuthenticated = verifyAuthenticated()
-
 
   return (
     <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
@@ -81,7 +80,7 @@ export const MenuMobile = ({ isOpen, onClose, onEditUserOpen, ml, mt }: MenuMobi
               />
               <NavItem
                 content="Cadastrar"
-                redirectTo="/"
+                redirectTo="/registration"
                 color="var(--grey0)"
                 border="1px solid var(--grey4)"
                 padding="20px"

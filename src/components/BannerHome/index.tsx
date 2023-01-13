@@ -1,15 +1,8 @@
 import { Flex, Text } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
-
 import { NavItem } from '../Header/NavItem'
-export interface Nav {
-  to?: any
-}
-export const BannerHome = ({ to }: Nav) => {
-  const [scroll, setScroll] = useState('')
-  useEffect(() => {
-    console.log(scroll)
-  }, [scroll])
+
+export const BannerHome = () => {
+
   return (
     <Flex
       alignItems="center"

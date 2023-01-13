@@ -6,13 +6,15 @@ import {
   useMemo,
   useState
 } from 'react'
+
 import { useNavigate } from 'react-router'
-import { ICreateUser, ICreateUserAddress } from '../interfaces/IUser/index'
-import { ILoginRequest } from '../pages/login'
-import api from '../services/api'
-import jwt_decode from 'jwt-decode'
+
+import { IBodyEdit, IBodyEditProps, ICreateUser, ICreateUserAddress } from '../interfaces/IUser/index'
 import { IPayload } from '../interfaces/payload'
-import { userMocked } from '../mocks/mocksUser'
+import { ILoginRequest } from '../pages/login'
+
+import jwt_decode from 'jwt-decode'
+import api from '../services/api'
 
 interface AuthContextProps {
   children: ReactNode
@@ -34,7 +36,6 @@ interface IUser {
 type OpenSuccessModal = (value: boolean) => void
 type OpenErrorModal = (value: boolean) => void
 
-
 interface UserContextData {
   user: IUser
   signUp: (
@@ -44,7 +45,8 @@ interface UserContextData {
   ) => Promise<void>
   error: string
   signIn: ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => Promise<void>
-  getUser: () => Promise<IUser>
+  getUser: () => Promise<void>
+  editUser: (props: IBodyEditProps) => Promise<void>
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData)
@@ -56,9 +58,9 @@ export const useUser = () => {
 }
 
 export const UserProvider = ({ children }: AuthContextProps) => {
-  const [user, setUser] = useState<IUser>({} as IUser)
-  const [payload, setPayload] = useState<IPayload>({} as IPayload)
+  const [user, setUser] = useState({} as IUser)
   const [error, setError] = useState('Email ou senha inválidos')
+
   const navigation = useNavigate()
 
 
@@ -68,7 +70,6 @@ export const UserProvider = ({ children }: AuthContextProps) => {
       onSuccessModalOpen: OpenSuccessModal,
       onErrorModalOpen: OpenErrorModal
     ) => {
-      console.log(data, 'provider')
       await api
         .post('users', data)
         .then(res => {
@@ -86,22 +87,16 @@ export const UserProvider = ({ children }: AuthContextProps) => {
   const getUser = useCallback(async () => {
     const tokenUser = localStorage.getItem('tokenUser');
 
-    const header = {
-      headers: {
-        Authorization: `Bearer ${tokenUser}`,
-      },
-    }
-
     const currentPayload: IPayload = await jwt_decode(tokenUser!)
-    setPayload(currentPayload)
 
     const id = currentPayload.id
 
-    const user = await api.get(`http://localhost:3000/users/${id}`, header).then(res => res.data)
-    setUser(user)
-    console.log('PROVIDER', user)
-    return user
-  }, [])
+    await api
+      .get(`/users/${id}`)
+      .then(res => setUser(res.data))
+      .catch(err => console.log(err))
+  }, [user])
+
 
   const signIn = useCallback(async ({ email, password }: ILoginRequest, onModalErrorOpen: OpenErrorModal) => {
     await api.post('/login', { email, password }).then(res => {
@@ -111,17 +106,37 @@ export const UserProvider = ({ children }: AuthContextProps) => {
       navigation(`/`);
 
       getUser()
-      console.log(payload.id)
 
     }).catch(err => {
       onModalErrorOpen(true)
       setError(err.response.data.message)
     })
-
   }, [])
 
+  const editUser = useCallback(async (props: IBodyEditProps) => {
+    const { data, id, onClose } = props
 
-  const userContextValues = useMemo(() => ({ user, signUp, error, signIn, getUser }), [])
+    const values = Object.values(data)
+    const keys = Object.keys(data)
+
+    const body: IBodyEdit = {}
+
+    keys.forEach((key: string, index) => {
+      if (values[index] !== undefined && values[index] !== '') {
+        body[key] = values[index]
+      }
+    })
+
+    await api
+      .patch(`http://localhost:3000/users/${id}`, body)
+      .then(res => {
+        setUser(res.data)
+        onClose()
+      })
+      .catch(err => console.log(err))
+  }, [])
+
+  const userContextValues = useMemo(() => ({ user, signUp, error, signIn, getUser, editUser }), [user, error])
 
   return (
     <UserContext.Provider value={userContextValues}>

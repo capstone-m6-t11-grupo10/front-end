@@ -7,21 +7,20 @@ import {
   Input,
   useDisclosure
 } from '@chakra-ui/react'
-import { useForm } from 'react-hook-form'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginSchema } from '../../schemas/login'
+import { useForm } from 'react-hook-form'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
+import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../providers/UserProvider'
-import { useCallback, useEffect, useState } from 'react'
-import { ModalErrorLogin } from '../../components/Modals/ModalErrorLogin'
-
 import { Label } from '../registration/components/Label'
 
-import { IUser } from '../../interfaces/IUser'
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
-import { settingUser, settingVehicles } from '../../services/api'
+
 
 
 export interface ILoginRequest {
@@ -29,14 +28,15 @@ export interface ILoginRequest {
   password: string
 }
 
-export default function Login() {
-  const [loading, setLoading] = useState(false)
-  const [userInfo, setUserInfo] = useState({} as IUser)
-
-
+const Login = () => {
   useEffect(() => {
-    settingUser(setUserInfo)
+    getUser()
   }, [])
+
+
+  const [loading, setLoading] = useState(false)
+  const { getUser, signIn } = useUser()
+  const navigate = useNavigate()
 
   const {
     register,
@@ -50,8 +50,12 @@ export default function Login() {
     onOpen: onModalErrorOpen
   } = useDisclosure()
 
-  const navigate = useNavigate()
-  const { signIn } = useUser()
+  const {
+    onOpen,
+    onClose: onModalEditClose,
+    isOpen: isModalEditOpen
+  } = useDisclosure()
+
 
   const navigateToRegister = useCallback(() => {
     navigate('/registration')
@@ -63,11 +67,9 @@ export default function Login() {
       .catch(() => setLoading(false))
   }
 
-  const { onOpen, onClose: onModalEditClose, isOpen: isModalEditOpen } = useDisclosure()
-
   return (
     <>
-      <ModalAdminEditProfile isOpen={isModalEditOpen} onClose={onModalEditClose} setUserInfo={setUserInfo} userInfo={userInfo} />
+      <ModalAdminEditProfile isOpen={isModalEditOpen} onClose={onModalEditClose} />
       <ModalErrorLogin isOpen={isModalErrorOpen} onClose={onModalErrorClose} />
       <Flex
         w="100%"
@@ -197,3 +199,5 @@ export default function Login() {
     </>
   )
 }
+
+export default Login

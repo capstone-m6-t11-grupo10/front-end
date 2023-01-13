@@ -7,41 +7,41 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  useDisclosure,
   FormControl,
   FormLabel,
   Input,
   Textarea
 } from '@chakra-ui/react'
-import React from 'react'
-import { FaPencilAlt } from 'react-icons/fa'
+
 import { useForm } from 'react-hook-form'
-import { Form } from 'react-router-dom'
-import { IUser, IUserEdit } from '../../../interfaces/IUser'
-import { edittingProfile } from '../../../services/api'
+import { useEffect } from 'react';
+
+import { IUserEdit } from '../../../interfaces/IUser'
+import { useUser } from '../../../providers/UserProvider';
 
 
 interface IModalEditProps {
-  userInfo: IUser,
-  setUserInfo: React.Dispatch<React.SetStateAction<IUser>>
   isOpen: boolean
   onClose: () => void
 }
 
 export const ModalAdminEditProfile = (data: IModalEditProps) => {
-  const { userInfo, setUserInfo, isOpen, onClose } = data
+  const { isOpen, onClose } = data
 
-  const id = userInfo.id
+  const { getUser, user, editUser } = useUser()
 
-  const initialRef = React.useRef(null)
-  const finalRef = React.useRef(null)
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  const id = user?.id
 
   const { handleSubmit, register } = useForm<IUserEdit>({
     mode: 'onBlur',
   })
 
   const onSubmit = (data: IUserEdit) => {
-    edittingProfile({ data, setUserInfo, id, onClose })
+    editUser({ data, id, onClose })
   }
 
   return (
@@ -64,7 +64,7 @@ export const ModalAdminEditProfile = (data: IModalEditProps) => {
               {...register('name')}
               type={'text'}
               size="lg"
-              placeholder={userInfo.name}
+              placeholder={user?.name}
               focusBorderColor="#5126EA"
             />
 
@@ -73,7 +73,7 @@ export const ModalAdminEditProfile = (data: IModalEditProps) => {
               {...register('email')}
               type={'email'}
               size="lg"
-              placeholder={userInfo.email}
+              placeholder={user?.email}
               focusBorderColor="#5126EA"
             />
 
@@ -82,7 +82,7 @@ export const ModalAdminEditProfile = (data: IModalEditProps) => {
               {...register('phone')}
               type={'tel'}
               size="lg"
-              placeholder={userInfo.phone}
+              placeholder={user?.phone}
               focusBorderColor="#5126EA"
             />
 
@@ -91,7 +91,7 @@ export const ModalAdminEditProfile = (data: IModalEditProps) => {
               {...register('birthDate')}
               type="date"
               size="lg"
-              placeholder={userInfo.birthDate}
+              placeholder={user?.birthDate}
               focusBorderColor="#5126EA"
             />
 

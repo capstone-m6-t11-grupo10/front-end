@@ -1,28 +1,24 @@
 import { IVehicle } from '../../interfaces/IVehicle';
 
 import { Box, Button, Flex, Image, Text, Avatar } from '@chakra-ui/react';
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile'
-import { IUser } from '../../interfaces/IUser'
-import { settingUser } from '../../services/api'
-import { useState } from 'react'
 import { isValidURL } from '../../utils/validateUrl';
-interface IUserAreaProps {
-  props: {
-    userInfo: IUser,
-    setUserInfo: React.Dispatch<React.SetStateAction<IUser>>,
-    onOpen: () => void,
 
-  }
+import { useUser } from '../../providers/UserProvider';
+
+interface UserAreaProps {
+  onOpen: () => void,
 }
 
+export const UserArea = ({ onOpen }: UserAreaProps) => {
 
-export const UserArea = ({ props }: IUserAreaProps) => {
-  const { setUserInfo, userInfo, onOpen } = props
-  const [user, setUser] = useState({} as IUser)
+  const { user } = useUser()
 
-  settingUser(setUser)
 
-  const isValidImage = isValidURL(user.image)
+  let isValidImage = false
+
+  if (user?.image) {
+    isValidImage = isValidURL(user.image)
+  }
 
   return (
     <Flex
@@ -46,7 +42,7 @@ export const UserArea = ({ props }: IUserAreaProps) => {
           boxSize="104px"
           borderRadius="50%"
         >
-          {isValidImage ? (
+          {isValidImage && user.image ? (
 
             <Image w="100%" src={user.image} />
           ) : (

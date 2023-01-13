@@ -1,54 +1,51 @@
+import { useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
+import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
+import { VehiclesCarousel } from './VehiclesCarousel'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
-import { settingProfileView, settingUser, settingVehicles } from '../../services/api'
-import { IUser } from '../../interfaces/IUser'
-import { ModalAdminEditProfile } from '../../components/Modals/ModalAdminEditProfile/index';
-
 import { UserArea } from './UserArea'
-import { VehiclesCarousel } from './VehiclesCarousel'
-import { ModalCreateAd } from '../../components/Modals/ModalCreateAd/index'
+import { IUser } from '../../interfaces/IUser'
 import { userMocked } from '../../mocks/mocksUser'
 import { IVehicleState } from '../../interfaces/IVehicle'
-
+import { UseVehicle } from '../../providers/vehicleProvider'
+import { useUser } from '../../providers/UserProvider';
 
 
 const ProfileViewAdmin = () => {
 
-  const [vehicles, setVehicles] = useState<IVehicleState>({} as IVehicleState)
-  const [userInfo, setUserInfo] = useState({} as IUser)
-  const { isOpen: isVehicleEdit, onOpen: onVehicleEdit, onClose: onVehicleEditClose } = useDisclosure()
-  const { isOpen: isEditUserOpen, onOpen: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
+  const { listVehicles, cars, motorbikes } = UseVehicle()
+  const { getUser } = useUser()
 
+  const { isOpen: isUserModalOpen, onOpen: onUserModalOpen, onClose: onUserModalClose } = useDisclosure()
+  const { isOpen: isEditUserOpen, onToggle: onEditUserOpen, onClose: onEditUserClose } = useDisclosure()
 
   useEffect(() => {
-    settingUser(setUserInfo)
-    settingVehicles(setVehicles)
-    settingProfileView({ setUserInfo })
-  }, []);
+
+    listVehicles()
+    getUser()
+  }, [])
 
   const isOwnerSellerPerfil = true
 
-  const propsMoto = { isOwnerSellerPerfil, vehicles: vehicles.motos, title: 'Motos' }
-  const propsCarro = { isOwnerSellerPerfil, vehicles: vehicles.carros, title: 'Carros' }
-  const propsUserArea = { setUserInfo, userInfo, onOpen: onVehicleEdit }
-  const propsModalCreateAd = { vehicles, setVehicles, isOpen: isVehicleEdit, onClose: onVehicleEditClose }
+  const propsMoto = { isOwnerSellerPerfil, vehicles: motorbikes, title: 'Motos' }
+  const propsCarro = { isOwnerSellerPerfil, vehicles: cars, title: 'Carros' }
 
 
   return (
     <>
       <ModalAdminEditProfile
         onClose={onEditUserClose}
-        setUserInfo={setUserInfo}
         isOpen={isEditUserOpen}
-        userInfo={userInfo}
       />
       <Box w="100%">
         <ModalCreateAd props={propsModalCreateAd} />
         <Header onEditUserOpen={onEditUserOpen} />
 
-        <UserArea props={propsUserArea} />
+
+        <UserArea onOpen={onUserModalOpen} />
+
 
         <VehiclesCarousel props={propsCarro} />
         <VehiclesCarousel props={propsMoto} />

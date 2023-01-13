@@ -1,31 +1,28 @@
-import { Box, Flex, Heading } from '@chakra-ui/react'
-import { NoVehiclesCard } from '../../components/cardNoVehicle'
-import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
-import { CardVehicleLeilao } from '../../components/cardVehicle/cardVehicleLeilao'
-import { vehiclesList } from '../../components/mockLeilao'
 import { IVehicle, IVehicleLeilao } from '../../interfaces/IVehicle'
-import { noVehicleMocked, vehicleMocked } from '../../mocks/mocksVehicles'
+import { Box, Flex, Heading } from '@chakra-ui/react'
 
-interface VehiclesCarousel {
+import { CardVehicleLeilao } from '../../components/cardVehicle/cardVehicleLeilao'
+import { CardVehicle } from '../../components/cardVehicle/cardVehicle'
+import { NoVehiclesCard } from '../../components/cardNoVehicle'
+
+
+interface IVehiclesCarousel {
   props: {
     vehicles?: IVehicle[]
-
     title: string
-
     isOwnerSellerPerfil: boolean
-
     leilao?: IVehicleLeilao[]
     id?: string
   }
 }
 
-export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
+export const VehiclesCarousel = ({ props }: IVehiclesCarousel) => {
   const { title, vehicles, isOwnerSellerPerfil, leilao, id } = props
 
-  let noVechiles = false
+  let noVehicles = false
 
   if (vehicles?.length === 0) {
-    noVechiles = true
+    noVehicles = true
   }
 
   return (
@@ -68,8 +65,7 @@ export const VehiclesCarousel = ({ props }: VehiclesCarousel) => {
           />
         ))}
 
-        {noVechiles && (
-          // <CardVehicle key='01234' props={{ vehicle: noVehicleMocked, isOwnerSellerPerfil: false }} />
+        {noVehicles && (
           <NoVehiclesCard />
         )}
       </Flex>

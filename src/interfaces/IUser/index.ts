@@ -1,6 +1,5 @@
 import { IAddress } from '../IAddress'
 import { IVehiclePosted } from '../IVehicle'
-import { Dispatch, SetStateAction } from 'react'
 
 export interface IUser {
   id: string
@@ -81,9 +80,9 @@ export interface ICreateUserAddress {
 export interface IBodyEdit {
   [key: string]: any
 }
+
 export interface IBodyEditProps {
   data: IBodyEdit
-  setUserInfo: Dispatch<SetStateAction<IUser>>
   id: string
   onClose: () => void
 }
